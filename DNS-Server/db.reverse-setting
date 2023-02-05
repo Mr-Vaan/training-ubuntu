@@ -1,0 +1,20 @@
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	system-engineer.com. root.system-engineer.com. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	ns1.system-engineer.com.
+@	IN	NS	ns2.system-engineer.com.
+76	IN	PTR	ns1.system-engineer.com.
+67	IN	PTR	ns2.system-engineer.com.
+76	IN	PTR	system-engineer.com.
+76	IN	PTR	www.system-engineer.com.
+76	IN	PTR	blog.system-engineer.com.
+76	IN	PTR	mail.system-engineer.com.
+76	IN	PTR	games.system-engineer.com.
