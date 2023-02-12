@@ -1,0 +1,9 @@
+cd = Untuk change directory
+mkdir = Untuk membuat Folder.
+touch = Untuk membuat File.
+ls = Untuk list directory/File
+pwd = Untuk mencetak directory
+whoami = Untuk mencetak output user/pengguna yang sedang login.
+
+
+

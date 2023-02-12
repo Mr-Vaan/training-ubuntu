@@ -1,0 +1,17 @@
+
+
+ openssl req -new -x509 -nodes -days 3650 -out certs/cacert.pem -keyout private/cakey.pem -extensions v3_ca -days 3650 -subj “/C=ID/ST=DKI Jakarta/L=West Jakarta/O=IDN/OU=IT/CN=IDN CA”
+   54  ssh root@10.23.1.49
+   55  cd
+   56  ip a
+   57  ls
+   58  cd CA/
+   59  ls
+   60  openssl req -x509 -nodes -new -keyout rootCA.key -days 365 -sha256 -out rootCA.pem
+   61  ls
+   62  openssl req -new -keyout ivanchriana.com.key -out ivanchriana.com.csr
+   63  openssl req -new -nodes -keyout ivanchriana.com.key -out ivanchriana.com.csr
+   64  openssl x509 -req -in ivanchriana.com.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out ivanchriana.com.crt -days 365 -sha256
+
+
+
