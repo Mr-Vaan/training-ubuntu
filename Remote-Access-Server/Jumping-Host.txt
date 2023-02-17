@@ -1,0 +1,45 @@
+
+Jumpung HOST Require :
+
+Originating IP: 10.23.2.76
+Jump Server IP (we’ll call this host-jump): 10.23.2.67
+Destination IP (we’ll call this host_destination): 10.23.2.111
+
+Contoh :
+ssh -A -J user@jump-server  user@destination server
+
+ssh -A -J root@10.23.2.67 root@10.23.2.111 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+
+Install Samba :
+apt install -y samba
+
+Membuat Folder dan permission :
+mkdir /home/share
+chmod 777 /home/share
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

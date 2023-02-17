@@ -1,0 +1,42 @@
+VirtualHost ini harus ada domainnya ya contoh : games.ivanchriana.com
+Membuat folder :
+mkdir -p /var/www/games
+
+download/clone website games:
+git clone https://github.com/gabrielecirulli/2048.git
+
+copy folder gamenya ke dalam /var/www/games:
+cp -fR 2048/* /var/www/games
+
+change owner folder games:
+chown -R www-data:www-data /var/www/games
+
+copy file /etc/apache2/sites-available/000-default.conf :
+cp 000-default.conf games.conf
+
+edit file games.conf :
+        ServerName games.ivanchriana.com
+        ServerAdmin webmaster@ivanchriana.com
+        DocumentRoot /var/www/games
+        ErrorLog ${APACHE_LOG_DIR}/games_error.log
+        CustomLog ${APACHE_LOG_DIR}/games_access.log combined
+
+enable site games:
+a2ensite games.conf
+
+restart apache :
+systemctl restart apache2 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

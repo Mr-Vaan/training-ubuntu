@@ -1,0 +1,32 @@
+Install package Utilities :
+sudo apt install apache2-utils 
+Untuk Bisa mengakses .htpasswd
+
+Configurasi Basic Auth :
+Buat Password Untuk Auth Web Servernya:
+sudo htpasswd -c /etc/apache2/.htpasswd ivan
+# pass : 123
+
+Config :
+vi /etc/apache2/sites-available/000-default.conf
+
+# Masukann "<Directory></Directory>" ke dalam "<VirtualHost></VirtualHost>" :
+
+<Directory "/var/www/html">
+      AuthType Basic
+      AuthName "Restricted Content"
+      AuthUserFile /etc/apache2/.htpasswd
+      Require valid-user
+</Directory>
+
+Aktifkan/enabled konfigurasi :
+a2enconf 000-default.conf
+
+Cek konfigurasi :
+apache2ctl configtest
+
+Restart apache2 :
+systemctl restart apache2
+
+
+

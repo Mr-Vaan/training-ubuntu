@@ -27,7 +27,7 @@ ns2	IN	A	10.23.2.67
 www	IN	CNAME	system-engineer.com.
 games	IN	CNAME	system-engineer.com.
 blog	IN	A	10.23.2.77 
-mail	IN	A	10.23.2.76
+mail	IN	A	10.23.2.67
 
 # Configure pada DB Reverse :
 
@@ -103,8 +103,11 @@ options {
 	listen-on-v6 { any; };
 };
 
-
-
+Setting Resolvnya:
+nameserver 10.23.2.67
+nameserver 8.8.8.8
+nameserver 10.23.2.77
+search ivanchriana.com
 
 
 

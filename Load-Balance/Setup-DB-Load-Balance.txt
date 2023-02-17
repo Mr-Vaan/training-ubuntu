@@ -1,0 +1,81 @@
+
+
+Droplet 1 - Load Balancer Hostname: srv3 OS: Ubuntu 22 IP: 10.23.2.111
+
+Droplet 2 - Node 1 Hostname: srv1 OS: Ubuntu 22 IP: 10.23.2.76
+
+Droplet 2 - Node 2 Hostname: srv2 OS: Ubuntu 22 IP: 10.23.2.67
+
+
+Server 1 :
+mysql -u root -p -e "INSERT INTO mysql.user (Host,User) values ('10.23.2.111','haproxy_check'); FLUSH PRIVILEGES;"
+mysql -u root -p -e "GRANT ALL PRIVILEGES ON *.* TO 'haproxy_root'@'10.23.2.111' IDENTIFIED BY 'password' WITH GRANT OPTION; FLUSH PRIVILEGES"
+
+Server 3 (Load Balance):
+apt-get install mariadb-server mariadb-client -y 
+
+mysql -h 10.23.2.76 -u haproxy_root -p -e "SHOW DATABASES"
+
+apt install haproxy -y 
+sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/haproxy
+systemctl restart haproxy 
+
+cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg{,.original}
+nano /etc/haproxy/haproxy.cfg
+
+global
+    log 127.0.0.1 local0 notice
+    user haproxy
+    group haproxy
+
+defaults
+    log global
+    retries 2
+    timeout connect 3000
+    timeout server 5000
+    timeout client 5000
+
+listen mysql-cluster
+    bind 127.0.0.1:3306
+    mode tcp
+    option mysql-check user haproxy_check
+    balance roundrobin
+    server mysql-1 10.0.0.1:3306 check
+    server mysql-2 10.0.0.2:3306 check weight 2
+
+listen 0.0.0.0:8080
+    mode http
+    stats enable
+    stats uri /
+    stats realm Strictly\ Private
+    stats auth A_Username:YourPassword
+    stats auth Another_User:passwd
+
+service haproxy reload
+
+mysql -h 127.0.0.1 -u haproxy_root -p -e "SHOW DATABASES"
+
+Testing :
+mysql -h 127.0.0.1 -u haproxy_root -p -e "show variables like 'server_id'"
+
+Query untuk "server_id" nya untuk multiple times.
+for i in `seq 1 6`
+do
+mysql -h 127.0.0.1 -u haproxy_root -ppassword -e "show variables like 'server_id'"
+done
+
+
+Server 2 :
+
+
+
+
+
+
+
+
+
+
+
+
+

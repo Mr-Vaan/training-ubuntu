@@ -1,0 +1,82 @@
+
+Server 1 :
+Create Key Pair :
+ssh-keygen
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): Enter
+Enter passphrase (empty for no passphrase): Enter
+Enter same passphrase again: Enter
+Your identification has been saved in /root/.ssh/id_rsa
+Your public key has been saved in /root/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:0O0fOPfTPBuELktLbjuU7SZ3rGzXZslq/FDu7QFvSg4 root@srv1
+The key's randomart image is:
++---[RSA 3072]----+
+|                 |
+|       . .       |
+|      . . .      |
+|       . . .  .  |
+|        S + =o o |
+|           *.+*o |
+|          .E++=B=|
+|          ++OB=BX|
+|          .=O**Bo|
++----[SHA256]-----+
+
+key server 1 sudah dibuat:
+root@srv1:~/.ssh# ls
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  known_hosts.old
+root@srv1:~/.ssh# cat authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwYaEPi+an3v1a0oLwmTL3436OM/SJcQCOyXI3oKUi8swvnSlfLcI/9bAU0LnZUWVXX4snAD213mpb7sEE5gjGZNXTf+nIG5cMHCLlKv1TFlGJjBinsztRU3jkSUax63mBFLAGmcXx6LsfqIQf1pzH8/0MWMqRweHlqe3xcUvamRIVDjttVHS/U1RR/5it1Tq1m0wC5krSLtQ+gJigb7Bew4ovCeLskfEc62CY94E+Kjs5/Ny+016H3fil6LmvB2ktbC00TjAEmXmSaaklWcUfXA78S+ZgCtsDeV+nXR8lDJXqpyhwBrxYXCn6H2zNYOwbFMfAlUkOFCSBmnOcMBQLoHSOyu61mkFycqHToY9VK2WwJcHCZnViF6s2IWvpLAy9E+s3xNKujxuqu7upViJVNPdnAooRz86QPegJFv4D5lIXLKdN4BCID35wRNwdUsXf7b5YYn2vhBsgF/UZeMp+mKptThOsClhccw5ejy80TiqELJsAWs5ty60v61iHW2c= root@srv1
+
+selanjutnya copy keygen dari Server 2 :
+masuk ke authorized_key
+vi ~/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwYaEPi+an3v1a0oLwmTL3436OM/SJcQCOyXI3oKUi8swvnSlfLcI/9bAU0LnZUWVXX4snAD213mpb7sEE5gjGZNXTf+nIG5cMHCLlKv1TFlGJjBinsztRU3jkSUax63mBFLAGmcXx6LsfqIQf1pzH8/0MWMqRweHlqe3xcUvamRIVDjttVHS/U1RR/5it1Tq1m0wC5krSLtQ+gJigb7Bew4ovCeLskfEc62CY94E+Kjs5/Ny+016H3fil6LmvB2ktbC00TjAEmXmSaaklWcUfXA78S+ZgCtsDeV+nXR8lDJXqpyhwBrxYXCn6H2zNYOwbFMfAlUkOFCSBmnOcMBQLoHSOyu61mkFycqHToY9VK2WwJcHCZnViF6s2IWvpLAy9E+s3xNKujxuqu7upViJVNPdnAooRz86QPegJFv4D5lIXLKdN4BCID35wRNwdUsXf7b5YYn2vhBsgF/UZeMp+mKptThOsClhccw5ejy80TiqELJsAWs5ty60v61iHW2c= root@srv1
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCx7nv5aPj+7mXSeGBKTx+HZhC2dM8SiH7gJ5VdsdqFkPdW47jadNbFcx3PbYMmmLY8WyH3KwJNLXyBVhDW/GXSwnTVUDSlECvSUS7/cV3tOxZpgyujb60AN/ilOI6unbSP+ubhGHcA3wZmZ629ob1wCnajcPJKm3GMxOb0Z424Y4cnlETBHR6FfhLwHiWMFxfWxr606qICNtYZrqODtLnCVh5rEWgiAioPY6qEnY2WgY9n4wCsdPew/9m1Pq0lBMChk/AAfVA6MPDh512H1nFOQBnJjTZmYs9lzwv/abFgN4eLrNRe2i7uKjR3theK7OlhfivKsnMWffdJEuGWjZ/dVNKZ0UATx7sACVwuGJkPMLSSDtkuegTiay+v9KjWErD8HX4SLXrRsUTSIDzy4E9IK7edJvD2dg3iLPqveVTC8AenaRoD41+zpQuypKmh7ZRiWfLh0ADqB/wMGEpQUi9n5AMw8gKEyJCBL5DgXjn0To3Q/dehQ0UiN3EWHxTNCXk= root@srv2
+
+:wq -> untuk menyimpan.
+
+kemudian kita test dengan mematikan Passauth no
+vi nano /etc/ssh/sshd_config 
+PasswordAuthentication no
+:wq -> untuk menympan.
+
+restart ssh :
+systemctl restart sshd
+
+
+Server 2 :
+ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+/root/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa
+Your public key has been saved in /root/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:IBW29NEnN7DC2zj4x68A5Sg3gljGL2jZeUt2RD/quRU root@srv2
+The key's randomart image is:
++---[RSA 3072]----+
+|      =o....     |
+| .   +.+..o.+    |
+|  + . o.=o.+ .   |
+| =oo...*.=.      |
+|oooo++*oSE.      |
+|.  .++++.o.      |
+|     . oo.o      |
+|        oo .     |
+|       .  ...    |
++----[SHA256]-----+
+root@srv2:~/.ssh# ls
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  known_hosts.old
+root@srv2:~/.ssh# cat id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCx7nv5aPj+7mXSeGBKTx+HZhC2dM8SiH7gJ5VdsdqFkPdW47jadNbFcx3PbYMmmLY8WyH3KwJNLXyBVhDW/GXSwnTVUDSlECvSUS7/cV3tOxZpgyujb60AN/ilOI6unbSP+ubhGHcA3wZmZ629ob1wCnajcPJKm3GMxOb0Z424Y4cnlETBHR6FfhLwHiWMFxfWxr606qICNtYZrqODtLnCVh5rEWgiAioPY6qEnY2WgY9n4wCsdPew/9m1Pq0lBMChk/AAfVA6MPDh512H1nFOQBnJjTZmYs9lzwv/abFgN4eLrNRe2i7uKjR3theK7OlhfivKsnMWffdJEuGWjZ/dVNKZ0UATx7sACVwuGJkPMLSSDtkuegTiay+v9KjWErD8HX4SLXrRsUTSIDzy4E9IK7edJvD2dg3iLPqveVTC8AenaRoD41+zpQuypKmh7ZRiWfLh0ADqB/wMGEpQUi9n5AMw8gKEyJCBL5DgXjn0To3Q/dehQ0UiN3EWHxTNCXk= root@srv2
+
+cat ~/.ssh/id_rsa.pub | ssh username@remote_host "mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod -R go= ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+

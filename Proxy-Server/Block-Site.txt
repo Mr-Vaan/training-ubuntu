@@ -1,0 +1,103 @@
+
+Block Website :
+
+Buat file untuk ngeblock websitenya :
+touch /etc/squid/blacklisted_sites.acl
+
+.facebook.com
+.twitter.com
+
+ESC -> :wq -> untuk ngesave
+
+vi /etc/squid/squid.conf 
+
+# added this script :
+acl bad_urls dstdomain "/etc/squid/blacklisted_sites.acl"
+http_access deny bad_urls
+
+Restart squid :
+systemctl restart squid
+
+
+Block Spesific Keyword :
+buat file block websitenya :
+touch /etc/squid/blockkeywords.lst
+vi blockkeywords.lst :
+facebook
+instagram
+gmail
+
+ESC -> :wq = untuk ngesave
+
+Configurasi Squid.conf :
+
+vi /etc/squid/squid.conf
+#Add Script :
+acl blockkeywordlist url_regex "/etc/squid/blockkeywords.lst"
+http_access deny blockkeywordlist
+
+restart squid :
+systemctl restart squid
+
+
+
+Client :
+Add Proxy di Browsernya. 
+Manual Configurasi, masukkan IP Server.
+IP 10.23.2.76 PORT 3258
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

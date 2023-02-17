@@ -1,0 +1,90 @@
+
+Install php:
+apt -y install php8.1 php8.1-mbstring php-pear
+
+versi php :
+php -v
+
+PHP 8.1.2 (cli) (built: Apr  7 2022 17:46:26) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.1.2, Copyright (c) Zend Technologies
+    with Zend OPcache v8.1.2, Copyright (c), by Zend Technologies
+
+test script :
+echo '<?php echo `php -i`."\n"; ?>' > php_test.php
+php php_test.php | head
+
+===================================================================
+phpinfo()
+PHP Version => 8.1.2
+
+System => Linux dlp.srv.world 5.15.0-25-generic #25-Ubuntu SMP Wed Mar 30 15:54:22 UTC 2022 x86_64
+Build Date => Apr  7 2022 17:46:26
+Build System => Linux
+Server API => Command Line Interface
+Virtual Directory Support => disabled
+Configuration File (php.ini) Path => /etc/php/8.1/cli
+Loaded Configuration File => /etc/php/8.1/cli/php.ini
+
+Install PHP Script :
+apt -y install libapache2-mod-php
+
+Configure PHP:
+
+vi /etc/php/8.1/apache2/php.ini
+# line 968: uncomment and add your timezone
+date.timezone = "Asia/Jakarta"
+
+restart apache2 :
+systemctl reload apache2
+
+# create a test page
+root@www:~# echo '<?php phpinfo(); ?>' > /var/www/html/info.php
+
+Install PHP-FPM :
+apt -y install php-fpm
+
+Add pada VirtualHost ssl :
+vi /etc/apache2/sites-available/default-ssl.conf
+# add into <VirtualHost> - </VirtualHost>
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/var/run/php/php8.1-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+ESC -> :wq -> untuk save 
+
+Untuk Enable module :
+a2enmod proxy_fcgi setenvif
+
+Untuk Enable Config :
+a2enconf php8.1-fpm
+
+
+Restart php fpm dan apache2 :
+systemctl restart php8.1-fpm apache2
+
+Test PHP Version :
+echo '<?php phpinfo(); ?>' > /var/www/html/info.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+Secure Transfer Protocol
+
+
+scp ./test.txt root@10.23.2.76:~/
+ubuntu@10.0.0.30's password:     # password of the user
+test.txt                                                100%   10     0.0KB/s   00:00
+
+Transfer File :
+# copy the [file.txt] on local to remote server [10.23.2.76]
+scp file.txt root@10.23.2.76:/home/ivan/
+
+# copy the [/home/ubuntu/test.txt] on remote server [10.23.2.76] to the local.
+scp root@10.23.2.76:/home/ubuntu/test.txt ./test.txt
+
+
+Transfer Folder :
+
+# copy the [Folder] on local to remote server [10.23.2.76]
+scp /Folder root@10.23.2.76:/home/ivan/
+
+# copy the [/home/ubuntu/Folder] on remote server [10.23.2.76] to the local.
+scp root@10.23.2.76:/home/ubuntu/Folder ./test.txt
+
+
+
+
+
+
+
+

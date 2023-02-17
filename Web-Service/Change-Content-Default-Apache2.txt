@@ -1,0 +1,15 @@
+
+Masuk ke /var/www/html :
+change Content :
+<center><h1>Change Content Web Server</h1></center>
+
+
+
+
+
+
+
+
+
+
+

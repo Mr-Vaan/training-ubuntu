@@ -1,0 +1,463 @@
+
+Ubah hostname :
+hostnamectl set-hostname mail.system-admin.com
+vi /etc/hosts :
+10.23.2.154     mail.system-admin.com mail
+
+Install DNSmasq :
+apt install dnsmasq -y 
+
+Configurasi DNSmasq :
+Copy file : 
+cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+
+nano /etc/dnsmasq.conf
+
+server= 10.23.1.154
+domain=system-admin.com
+mx-host= system-admin.com, mail.system-admin.com, 10
+mx-host= mail.system-admin.com, mail.system-admin.com, 10
+listen-address= 10.23.1.154
+
+untuk melihat dns mail :
+dig -t A mail.system-admin.com
+; <<>> DiG 9.16.1-Ubuntu <<>> -t A mail.inguide.in
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15272
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+ 
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;mail.inguide.in.              IN      A
+ 
+;; ANSWER SECTION:
+mail.inguide.in.       1799    IN      A       38.242.250.63
+ 
+;; Query time: 31 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Sun Jul 10 14:59:46 CEST 2022
+;; MSG SIZE  rcvd: 61
+
+dig -t MX system-admin.com
+; <<>> DiG 9.16.1-Ubuntu <<>> -t MX inguide.in
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4658
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+ 
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;inguide.in.                   IN      MX
+ 
+;; ANSWER SECTION:
+inguide.in.            1799    IN      MX      10 mail.inguide.in.
+ 
+;; Query time: 35 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Sun Jul 10 14:59:05 CEST 2022
+;; MSG SIZE  rcvd: 61
+
+Install Zimbra :
+Package :
+wget https://files.zimbra.com/downloads/8.8.15_GA/zcs-8.8.15_GA_4179.UBUNTU20_64.20211118033954.tgz
+
+Extract files :
+tar -xvzf zcs-8.8.15_GA_4179.UBUNTU20_64.20211118033954.tgz
+masuk ke folder dan Install :
+~/zcs-8.8.15_GA_4179.UBUNTU20_64.20211118033954# ./install.sh
+
+
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+Do you agree with the terms of the software license agreement? [N] y
+ 
+Use Zimbra's package repository [Y] y
+ 
+Warning: apt-key output should not be parsed (stdout is not a terminal)
+Importing Zimbra GPG key
+ 
+Configuring package repository
+ 
+Checking for installable packages
+ 
+Found zimbra-core (local)
+Found zimbra-ldap (local)
+Found zimbra-logger (local)
+Found zimbra-mta (local)
+Found zimbra-dnscache (local)
+Found zimbra-snmp (local)
+Found zimbra-store (local)
+Found zimbra-apache (local)
+Found zimbra-spell (local)
+Found zimbra-memcached (repo)
+Found zimbra-proxy (local)
+Found zimbra-drive (repo)
+Found zimbra-imapd (local)
+Found zimbra-patch (repo)
+Found zimbra-mta-patch (repo)
+Found zimbra-proxy-patch (repo)
+ 
+Select the packages to install
+ 
+Install zimbra-ldap [Y] y
+ 
+Install zimbra-logger [Y] y
+ 
+Install zimbra-mta [Y] y
+ 
+Install zimbra-dnscache [Y] n
+ 
+Install zimbra-snmp [Y] y
+ 
+Install zimbra-store [Y] y
+ 
+Install zimbra-apache [Y] y
+ 
+Install zimbra-spell [Y] y
+ 
+Install zimbra-memcached [Y] y
+ 
+Install zimbra-proxy [Y] y
+ 
+Install zimbra-drive [Y] n
+ 
+Install zimbra-imapd (BETA - for evaluation only) [N] n
+ 
+Install zimbra-chat [Y] n
+Checking required space for zimbra-core
+Checking space for zimbra-store
+Checking required packages for zimbra-store
+zimbra-store package check complete.
+
+The system will be modified.  Continue? [N] y
+ 
+Beginning Installation - see /tmp/install.log.UUJ9kVuj for details...
+ 
+                          zimbra-core-components will be downloaded and installed.
+                            zimbra-timezone-data will be installed.
+                   zimbra-common-mbox-conf-attrs will be installed.
+                          zimbra-common-core-jar will be installed.
+                  zimbra-common-mbox-conf-rights will be installed.
+                         zimbra-common-core-libs will be installed.
+                    zimbra-common-mbox-conf-msgs will be installed.
+                           zimbra-common-mbox-db will be installed.
+                         zimbra-common-mbox-docs will be installed.
+                   zimbra-common-mbox-native-lib will be installed.
+                         zimbra-common-mbox-conf will be installed.
+                                     zimbra-core will be installed.
+                          zimbra-ldap-components will be downloaded and installed.
+                                     zimbra-ldap will be installed.
+                                   zimbra-logger will be installed.
+                           zimbra-mta-components will be downloaded and installed.
+                                      zimbra-mta will be installed.
+                      zimbra-dnscache-components will be downloaded and installed.
+                                 zimbra-dnscache will be installed.
+                          zimbra-snmp-components will be downloaded and installed.
+                                     zimbra-snmp will be installed.
+                         zimbra-store-components will be downloaded and installed.
+                       zimbra-jetty-distribution will be downloaded and installed.
+                          zimbra-mbox-store-libs will be installed.
+                                zimbra-mbox-conf will be installed.
+                   zimbra-mbox-admin-console-war will be installed.
+                                 zimbra-mbox-war will be installed.
+                       zimbra-mbox-webclient-war will be installed.
+                             zimbra-mbox-service will be installed.
+                                    zimbra-store will be installed.
+                        zimbra-apache-components will be downloaded and installed.
+                                   zimbra-apache will be installed.
+                         zimbra-spell-components will be downloaded and installed.
+                                    zimbra-spell will be installed.
+                                zimbra-memcached will be downloaded and installed.
+                         zimbra-proxy-components will be downloaded and installed.
+                                    zimbra-proxy will be installed.
+                                    zimbra-patch will be downloaded and installed                                                                                                                                                                                                             (later).
+                                zimbra-mta-patch will be downloaded and installed                                                                                                                                                                                                             (later).
+                              zimbra-proxy-patch will be downloaded and installed                                                                                                                                                                                                             (later).
+ 
+Downloading packages (11):
+   zimbra-core-components
+   zimbra-ldap-components
+   zimbra-mta-components
+   zimbra-dnscache-components
+   zimbra-snmp-components
+   zimbra-store-components
+   zimbra-jetty-distribution
+   zimbra-apache-components
+   zimbra-spell-components
+   zimbra-memcached
+   zimbra-proxy-components
+      ...done
+ 
+Removing /opt/zimbra
+Removing zimbra crontab entry...done.
+Cleaning up zimbra init scripts...done.
+Cleaning up /etc/security/limits.conf...done.
+ 
+Finished removing Zimbra Collaboration Server
+
+
+
+
+#  Set Master DNS IP address and Admin Password
+
+Main menu
+
+   1) Common Configuration:
+   2) zimbra-ldap:                             Enabled
+   3) zimbra-logger:                           Enabled
+   4) zimbra-mta:                              Enabled
+   5) zimbra-dnscache:                         Enabled
+******* +Master DNS IP address(es):            UNSET
+        +Enable DNS lookups over TCP:          yes
+        +Enable DNS lookups over UDP:          yes
+        +Only allow TCP to communicate with Master DNS: no                        
+
+   6) zimbra-snmp:                             Enabled
+   7) zimbra-store:                            Enabled
+        +Create Admin User:                    yes
+        +Admin user to create:                 admin@mail.inguide.in
+******* +Admin Password                        UNSET
+        +Anti-virus quarantine user:           virus-quarantine.c73xqgvr@mail.inguide.in
+        +Enable automated spam training:       yes
+        +Spam training user:                   spam.g1kkn_0g6l@mail.inguide.in
+        +Non-spam(Ham) training user:          ham.tzkyhmqk2a@mail.inguide.in
+        +SMTP host:                            mail.inguide.in
+        +Web server HTTP port:                 8080
+        +Web server HTTPS port:                8443
+        +Web server mode:                      https
+        +IMAP server port:                     7143
+        +IMAP server SSL port:                 7993
+        +POP server port:                      7110
+        +POP server SSL port:                  7995
+        +Use spell check server:               yes
+        +Spell server URL:                     http://mail.inguide.in:7780/aspell.php
+        +Enable version update checks:         TRUE
+        +Enable version update notifications:  TRUE
+        +Version update notification email:    admin@mail.inguide.in
+        +Version update source email:          admin@mail.inguide.in
+        +Install mailstore (service webapp):   yes
+        +Install UI (zimbra,zimbraAdmin webapps): yes
+
+   8) zimbra-spell:                            Enabled
+   9) zimbra-proxy:                            Enabled
+  10) Default Class of Service Configuration:
+   s) Save config to file
+   x) Expand menu
+   q) Quit5
+
+Answer follows:
+Address unconfigured (**) items  (? - help) 5
+ 
+ 
+DNS Cache configuration
+ 
+   1) Status:                                  Enabled
+** 2) Master DNS IP address(es):               UNSET
+   3) Enable DNS lookups over TCP:             yes
+   4) Enable DNS lookups over UDP:             yes
+   5) Only allow TCP to communicate with Master DNS: no
+ 
+Select, or 'r' for previous menu [r] 2
+ 
+IP Address(es) of Master DNS Server(s), space separated: 8.8.8.8
+
+#  Next Set Admin Password :
+Main menu
+ 
+   1) Common Configuration:
+   2) zimbra-ldap:                             Enabled
+   3) zimbra-logger:                           Enabled
+   4) zimbra-mta:                              Enabled
+   5) zimbra-dnscache:                         Enabled
+   6) zimbra-snmp:                             Enabled
+   7) zimbra-store:                            Enabled
+        +Create Admin User:                    yes
+        +Admin user to create:                 admin@mail.inguide.in
+******* +Admin Password                        UNSET
+        +Anti-virus quarantine user:           virus-quarantine.3liys4nw@mail.inguide.in
+        +Enable automated spam training:       yes
+        +Spam training user:                   spam.cfzvesa2d5@mail.inguide.in
+        +Non-spam(Ham) training user:          ham.ofijq5m5@mail.inguide.in
+        +SMTP host:                            mail.inguide.in
+        +Web server HTTP port:                 8080
+        +Web server HTTPS port:                8443
+        +Web server mode:                      https
+        +IMAP server port:                     7143
+        +IMAP server SSL port:                 7993
+        +POP server port:                      7110
+        +POP server SSL port:                  7995
+        +Use spell check server:               yes
+        +Spell server URL:                     http://mail.inguide.in:7780/aspell.php
+        +Enable version update checks:         TRUE
+        +Enable version update notifications:  TRUE
+        +Version update notification email:    admin@mail.inguide.in
+        +Version update source email:          admin@mail.inguide.in
+        +Install mailstore (service webapp):   yes
+        +Install UI (zimbra,zimbraAdmin webapps): yes
+ 
+   8) zimbra-spell:                            Enabled
+   9) zimbra-proxy:                            Enabled
+  10) Default Class of Service Configuration:
+   s) Save config to file
+   x) Expand menu
+   q) Quit
+ 
+Address unconfigured (**) items  (? - help) 7
+ 
+ 
+Store configuration
+ 
+   1) Status:                                  Enabled
+   2) Create Admin User:                       yes
+   3) Admin user to create:                    admin@mail.inguide.in
+** 4) Admin Password                           UNSET
+   5) Anti-virus quarantine user:              virus-quarantine.3liys4nw@mail.inguide.in
+   6) Enable automated spam training:          yes
+   7) Spam training user:                      spam.cfzvesa2d5@mail.inguide.in
+   8) Non-spam(Ham) training user:             ham.ofijq5m5@mail.inguide.in
+   9) SMTP host:                               mail.inguide.in
+  10) Web server HTTP port:                    8080
+  11) Web server HTTPS port:                   8443
+  12) Web server mode:                         https
+  13) IMAP server port:                        7143
+  14) IMAP server SSL port:                    7993
+  15) POP server port:                         7110
+  16) POP server SSL port:                     7995
+  17) Use spell check server:                  yes
+  18) Spell server URL:                        http://mail.inguide.in:7780/aspell.php
+  19) Enable version update checks:            TRUE
+  20) Enable version update notifications:     TRUE
+  21) Version update notification email:       admin@mail.inguide.in
+  22) Version update source email:             admin@mail.inguide.in
+  23) Install mailstore (service webapp):      yes
+  24) Install UI (zimbra,zimbraAdmin webapps): yes
+ 
+Select, or 'r' for previous menu [r] 4
+
+
+# Next, either accept the generated pass or enter the new one :
+
+Password for admin@mail.inguide.in (min 6 characters): [m3XShBkX]
+ 
+Store configuration
+ 
+   1) Status:                                  Enabled
+   2) Create Admin User:                       yes
+   3) Admin user to create:                    admin@mail.inguide.in
+   4) Admin Password                           set
+   5) Anti-virus quarantine user:              virus-quarantine.3liys4nw@mail.inguide.in
+   6) Enable automated spam training:          yes
+   7) Spam training user:                      spam.cfzvesa2d5@mail.inguide.in
+   8) Non-spam(Ham) training user:             ham.ofijq5m5@mail.inguide.in
+   9) SMTP host:                               mail.inguide.in
+  10) Web server HTTP port:                    8080
+  11) Web server HTTPS port:                   8443
+  12) Web server mode:                         https
+  13) IMAP server port:                        7143
+  14) IMAP server SSL port:                    7993
+  15) POP server port:                         7110
+  16) POP server SSL port:                     7995
+  17) Use spell check server:                  yes
+  18) Spell server URL:                        http://mail.inguide.in:7780/aspell.php
+  19) Enable version update checks:            TRUE
+  20) Enable version update notifications:     TRUE
+  21) Version update notification email:       admin@mail.inguide.in
+  22) Version update source email:             admin@mail.inguide.in
+  23) Install mailstore (service webapp):      yes
+  24) Install UI (zimbra,zimbraAdmin webapps): yes
+
+
+#  Now you will be asked a few more questions.
+
+Select, or 'r' for previous menu [r] r
+ 
+Main menu
+ 
+   1) Common Configuration:
+   2) zimbra-ldap:                             Enabled
+   3) zimbra-logger:                           Enabled
+   4) zimbra-mta:                              Enabled
+   5) zimbra-dnscache:                         Enabled
+   6) zimbra-snmp:                             Enabled
+   7) zimbra-store:                            Enabled
+   8) zimbra-spell:                            Enabled
+   9) zimbra-proxy:                            Enabled
+  10) Default Class of Service Configuration:
+   s) Save config to file
+   x) Expand menu
+   q) Quit
+ 
+*** CONFIGURATION COMPLETE - press 'a' to apply
+Select from menu, or press 'a' to apply config (? - help) a
+Save configuration data to a file? [Yes]
+Save config in file: [/opt/zimbra/config.21298]
+Saving config in /opt/zimbra/config.21298...done.
+The system will be modified - continue? [No] yes
+
+
+
+Akses ke browser :
+https://mail.inguide.in:7071
+
+
+
+

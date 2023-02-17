@@ -1,4 +1,15 @@
+chmod = change mode 
+chown = change owner 
+chgrp = change group 
 
+4 = r 
+2 = w 
+1 = x 
 
+Contoh penggunaan :
+chmod 777 nama-folder atau nama-File
 
+chown root:root nama-folder atau nama-File
+
+chgrp :www-data nama-folder atau nama-File
 

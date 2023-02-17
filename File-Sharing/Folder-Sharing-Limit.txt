@@ -1,0 +1,131 @@
+
+
+Install Samba :
+apt -y install samba
+
+Buat Group :
+
+groupadd smbgroup01
+mkdir /home/share01
+chgrp smbgroup01 /home/share01
+chmod 777 /home/share01
+
+vi /etc/samba/smb.conf
+
+[global]
+   # line 25 : add (set charset)
+   unix charset = UTF-8
+
+   # line 40 : uncomment and add network you allow to access
+   interfaces = 10.23.2.76/22
+
+   # line 101 : comment out and add the line below
+   #map to guest = bad user
+   security = user
+
+.....
+.....
+
+# add to the end
+# any Share name you like
+[Share01]
+   # specify shared directory
+   path = /home/share01
+   # allow writing
+   writable = yes
+   # not allow guest user (nobody)
+   guest ok = no
+   # allow only [smbgroup01] group
+   valid users = @smbgroup01
+   # set group for new files/directories to [smbgroup01]
+   force group = smbgroup01
+   # set permission [770] when file created
+   force create mode = 777
+   # set permission [770] when folder created
+   force directory mode = 777
+   # inherit permissions from parent folder
+   inherit permissions = yes 
+
+restart samba :
+systemctl restart smbd
+
+
+# add Samba User
+adduser ubuntu
+smbpasswd -a ubuntu
+
+New SMB password: 12345    # set passwords
+Retype new SMB password: 12345
+Added user ubuntu.
+root@smb:~# usermod -aG smbgroup01 ubuntu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+
+Configure Samba :
+
+vi /etc/samba/smb.conf
+
+[global]
+   # line 25 : add (set charset)
+   unix charset = UTF-8
+
+   # line 40 : uncomment and add network you allow to access
+   interfaces = 127.0.0.0/8 10.0.0.0/24
+
+   # line 101 : confirm (no authentication)
+   map to guest = bad user
+
+.....
+.....
+
+# add to the end
+# any Share name you like
+
+[Share]
+   # specify shared directory
+   path = /home/share
+   # allow writing
+   writable = yes
+   # allow guest user (nobody)
+   guest ok = yes
+   # looks all as guest user
+   guest only = yes
+   # set permission [777] when file created
+   force create mode = 777
+   # set permission [777] when folder created
+   force directory mode = 777 
+
+
+Restart Samba :
+systemctl restart smbd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

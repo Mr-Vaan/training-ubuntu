@@ -1,0 +1,8 @@
+
+
+ssh root@10.23.2.52 
+
+Use port :
+ssh root@10.23.2.52 -p 61435
+
+

@@ -1,0 +1,16 @@
+
+Upgrare dan Update Package :
+apt update && upgrade -y --fix-missing 
+
+
+
+
+
+
+
+
+
+
+
+
+

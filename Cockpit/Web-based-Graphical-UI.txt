@@ -1,0 +1,53 @@
+
+
+
+Health :
+Untuk Melihat Package Update
+
+Usage :
+Untuk melihat CPU, Memory, Disk, Network.
+
+System Informations :
+Untuk Melihat Hardware seperti: Model,Assets, Machine, Uptime
+
+Configurations :
+Untuk melihat Configurasi
+Hostname, System time, Domain, Performance, Secure Shell.
+
+
+
+Logs : 
+Untuk melihat system yang sedang berjalan secara realtime.
+
+Storage :
+Untuk Melihat storage dan monitoring storage yang tersedia : Filesystem, Device, Drives, Other Devices, Storage Logs.
+
+Networking :
+Untuk Melihat network/interface kita. seperti : IP Address, Name, Sending, Received.
+Network Logs,Transmitting dan Receiving 
+
+Virtual Machines :
+Untuk Melihat virtual machine yang berrjalan atau untuk membuat VM.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

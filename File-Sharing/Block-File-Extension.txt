@@ -1,0 +1,13 @@
+Contoh Untuk Block Extensions :
+
+vi /etc/samba/smb.conf
+[Vishal]
+comment = vishalvyas
+Path = /home/vishal
+public = yes
+writable = yes
+browseable = yes
+read only = no
+valid user = vishal
+create mask = 0775
+Veto files = /*.exe/*.com/*.dll/*.bat/*.vbs/*.tmp/*.mp3/*.avi/*.mp4/*.wmv/*.wma/

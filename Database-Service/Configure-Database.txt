@@ -1,0 +1,111 @@
+
+
+# connect to MariaDB
+root@www:~# mysql
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 37
+Server version: 10.6.7-MariaDB-2ubuntu1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+# [Unix_Socket] authentication is enabled by default
+MariaDB [(none)]> show grants for root@localhost; 
++-----------------------------------------------------------------------------------------------------------------------------------------+
+| Grants for root@localhost                                                                                                               |
++-----------------------------------------------------------------------------------------------------------------------------------------+
+| GRANT ALL PRIVILEGES ON *.* TO `root`@`localhost` IDENTIFIED VIA mysql_native_password USING 'invalid' OR unix_socket WITH GRANT OPTION |
+| GRANT PROXY ON ''@'%' TO 'root'@'localhost' WITH GRANT OPTION                                                                           |
++-----------------------------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.000 sec)
+
+# show user list
+MariaDB [(none)]> select user,host,password from mysql.user; 
++-------------+-----------+----------+
+| User        | Host      | Password |
++-------------+-----------+----------+
+| mariadb.sys | localhost |          |
+| root        | localhost | invalid  |
+| mysql       | localhost | invalid  |
++-------------+-----------+----------+
+3 rows in set (0.001 sec)
+
+# show database list
+MariaDB [(none)]> show databases; 
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.000 sec)
+
+# create test database
+MariaDB [(none)]> create database test_database; 
+Query OK, 1 row affected (0.000 sec)
+
+# create test table on test database
+MariaDB [(none)]> create table test_database.test_table (id int, name varchar(50), address varchar(50), primary key (id)); 
+Query OK, 0 rows affected (0.108 sec)
+
+# insert data to test table
+MariaDB [(none)]> insert into test_database.test_table(id, name, address) values("001", "Ubuntu", "Hiroshima"); 
+Query OK, 1 row affected (0.036 sec)
+
+# show test table
+MariaDB [(none)]> select * from test_database.test_table; 
++----+--------+-----------+
+| id | name   | address   |
++----+--------+-----------+
+|  1 | Ubuntu | Hiroshima |
++----+--------+-----------+
+1 row in set (0.000 sec)
+
+# delete test database
+MariaDB [(none)]> drop database test_database; 
+Query OK, 1 row affected (0.111 sec)
+
+MariaDB [(none)]> exit
+Bye
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

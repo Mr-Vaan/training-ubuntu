@@ -1,0 +1,168 @@
+
+Install PHP :
+
+package php :
+apt -y install php8.1 php8.1-mbstring php-pear
+lihat versi php :
+php -v
+
+Untuk melihat versi php juga :
+echo '<?php echo `php -i`."\n"; ?>' > php_test.php
+php php_test.php | head
+
+Install php fpm untuk manage php script fast :
+apt -y install php-fpm
+
+Set VirtualHost untuk FPM :
+vi /etc/apache2/sites-available/default-ssl.conf
+
+# add into <VirtualHost> - </VirtualHost>
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/var/run/php/php8.1-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+</VirtualHost>
+
+untuk mengaktifkan depedensi :
+a2enmod proxy_fcgi setenvif
+
+untuk enable config :
+a2enconf php8.1-fpm
+
+restart apache2  dan php fpm:
+systemctl restart php8.1-fpm apache2
+
+Untuk display via Website :
+echo '<?php phpinfo(); ?>' > /var/www/html/info.php
+
+Install Phpmyadmin:
+apt -y install phpmyadmin
+Konfigurasi paket
+┌──────────────────────────────┤ Sedang mengonfigurasi phpmyadmin ├───────────────────────────────┐
+│ Harap pilih peladen web yang harus dikonfigurasi secara otomatis untuk menjalankan phpMyAdmin.  │
+│                                                                                                 │
+│ Peladen web yang akan dikonfigurasi secara otomatis:                                            │
+│                                                                                                 │
+│    [*] apache2                                                                                  │
+│    [ ] lighttpd                                                                                 │
+│                                                                                                 │
+│                                                                                                 │
+│                                             <Ok>                                                │
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Konfigurasi paket
+  ┌─────────────────────────────────────────────┤ Sedang mengonfigurasi phpmyadmin ├─────────────────────────────────────────────┐
+  │                                                                                                                              │
+  │ The phpmyadmin package must have a database installed and configured before it can be used. This can be optionally handled   │
+  │ with dbconfig-common.                                                                                                        │
+  │                                                                                                                              │
+  │ If you are an advanced database administrator and know that you want to perform this configuration manually, or if your      │
+  │ database has already been installed and configured, you should refuse this option. Details on what needs to be done should   │
+  │ most likely be provided in /usr/share/doc/phpmyadmin.                                                                        │
+  │                                                                                                                              │
+  │ Otherwise, you should probably choose this option.                                                                           │
+  │                                                                                                                              │
+  │ Configure database for phpmyadmin with dbconfig-common?                                                                      │
+  │                                                                                                                              │
+  │                                     <*Yes>                                       <No>                                        │
+  │                                                                                                                              │
+  └──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Konfigurasi paket
+
+   ┌───────────────────────────────────────────┤ Sedang mengonfigurasi phpmyadmin ├────────────────────────────────────────────┐
+   │ Please provide a password for phpmyadmin to register with the database server. If left blank, a random password will be   │
+   │ generated.                                                                                                                │
+   │                                                                                                                           │
+   │ MySQL application password for phpmyadmin:                                                                                │
+   │                                                                                                                           │
+   │ ********_________________________________________________________________________________________________________________ │
+   │                                                                                                                           │
+   │                                   <*Ok>                                        <Cancel>                                   │
+   │                                                                                                                           │
+   └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Konfigurasi paket
+                                          ┌────┤ Sedang mengonfigurasi phpmyadmin ├─────┐
+                                          │                                             │
+                                          │                                             │
+                                          │ Password confirmation:                      │
+                                          │                                             │
+                                          │ ********___________________________________ │
+                                          │                                             │
+                                          │          <*Ok>             <Cancel>         │
+                                          │                                             │
+                                          └─────────────────────────────────────────────┘
+
+
+Konfigurasi paket
+
+   ┌─────────────────────────────────┤ Sedang mengonfigurasi phpmyadmin ├─────────────────────────────────┐
+   │                                                                                                      │
+   │ An error occurred while installing the database:                                                     │
+   │                                                                                                      │
+   │ ERROR 2002 (HY000): Can't connect to local server through socket '/run/mysqld/mysqld.sock' (111) .   │
+   │ Your options are:                                                                                    │
+   │  * abort - Causes the operation to fail; you will need to downgrade,                                 │
+   │    reinstall, reconfigure this package, or otherwise manually intervene                              │
+   │    to continue using it. This will usually also impact your ability to                               │
+   │    install other packages until the installation failure is resolved.                                │
+   │  * retry - Prompts once more with all the configuration questions                                    │
+   │    (including ones you may have missed due to the debconf priority                                   │
+   │    setting) and makes another attempt at performing the operation.                                   │
+   │  * retry (skip questions) - Immediately attempts the operation again,                                │
+   │    skipping all questions. This is normally useful only if you have                                  │
+   │    solved the underlying problem since the time the error occurred.                                  │
+   │  * ignore - Continues the operation ignoring dbconfig-common errors.                                 │
+   │    This will usually leave this package without a functional database.                               │
+   │                                                                                                      │
+   │                                                <Ok>                                                  │
+   │                                                                                                      │
+   └──────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+
+configure haproxy :
+vi /etc/haproxy/haproxy.cfg
+
+frontend http
+        bind *:80
+        bind *:443
+        default_backend backend_servers
+        option  forwardfor
+
+backend backend_servers
+        balance roundrobin
+        server  srv1    10.23.2.76:80   check
+        server  srv2    10.23.2.67:80   check
+
+restart haproxy :
+systemctl restart haproxy
+
+untuk enable module remote :
+a2enmod remoteip
+
+configure pada apache2 :
+vi /etc/apache2/apache2.conf
+
+vi /etc/apache2/apache2.conf
+# line 212-215 : change like follows
+# for RemoteIPInternalProxym, specify HAProxy IP address
+RemoteIPHeader X-Forwarded-For
+RemoteIPInternalProxy 10.0.0.30
+LogFormat "%v:%p %a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
