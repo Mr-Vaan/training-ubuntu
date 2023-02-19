@@ -1,0 +1,98 @@
+
+
+Reverse Proxy :
+
+sudo nano /etc/squid/squid.conf
+. . . 
+#
+# INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
+#
+include /etc/squid/conf.d/*
+# Example rule allowing access from your local networks.
+# Adapt localnet in the ACL section to list your (internal) IP networks
+# from where browsing should be allowed
+#http_access allow localnet
+http_access allow localhost
+
+# And finally deny all other access to this proxy
+http_access deny all
+. . . 
+
+#
+# INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
+#
+include /etc/squid/conf.d/*
+# Example rule allowing access from your local networks.
+acl localnet src 10.23.2.76
+
+# Adapt localnet in the ACL section to list your (internal) IP networks
+# from where browsing should be allowed
+#http_access allow localnet
+http_access allow localhost
+
+
+===================================================================================================================================================
+Reverse PROXY :
+
+vi /etc/squid/squid.conf
+
+# line 1555 : add (allow http access all)
+http_access allow all 
+http_access deny all
+
+# line 2107 : change like follows (specify backend Web server for defaultsite)
+#http_port 3128
+http_port 80 accel defaultsite=node01.srv.world
+https_port 443 accel defaultsite=node01.srv.world tls-cert=/etc/letsencrypt/live/dlp.srv.world/fullchain.pem tls-key=/etc/letsencrypt/live/dlp.srv.world/privkey.pem
+
+# line 3489 : add
+cache_peer node01.srv.world parent 80 0 no-query originserver 
+
+# line 3615 : add to specify memory cache size
+cache_mem 256 MB 
+
+# line 3887 : add
+# number means ⇒ [disk cache size] [number of directories on top level] [number of directories on 2nd level]
+cache_dir ufs /var/spool/squid 256 16 256 
+
+systemctl restart squid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

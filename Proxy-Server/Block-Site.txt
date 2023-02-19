@@ -46,11 +46,58 @@ Add Proxy di Browsernya.
 Manual Configurasi, masukkan IP Server.
 IP 10.23.2.76 PORT 3258
 
+========================================================================================
+
+# line 1209: add (define ACL for internal network)
+acl my_localnet src 10.23.0.0/22
+
+# line 1397: uncomment
+http_access deny to_localhost
+
+# line 1408: comment out and add the line (apply ACL for internal network)
+#http_access allow localhost
+http_access allow my_localnet
+
+# line 5611: add
+request_header_access Referer deny all
+request_header_access X-Forwarded-For deny all
+request_header_access Via deny all
+request_header_access Cache-Control deny all
+
+# line 8264: add
+# forwarded_for on
+forwarded_for off
+
+# line 1211: add path domain list and other
+acl blocked dstdomain "/etc/squid/list-domain"
+http_access deny blocked
+http_access allow my_localnet
+
+# line 1409: add (allow http access all)
+http_access allow all
+
+# line 1907: change like follows (specify backend Web server for defaultsite)
+#http_port 3128
+http_port 80 accel defaultsite=10.23.1.109
+
+# line 3252: add
+cache_peer 10.23.1.109 parent 80 0 no-query originserver
+
+# line 3378: add (memory cache size)
+cache_mem 256 MB
+
+# line 3650: add
+# number means ⇒ [disk cache size] [number of directories on top level] [number of directories on 2nd level]
+cache_dir ufs /var/spool/squid 256 16 256
 
 
 
 
-
+list-domain :
+youtube.com
+www.youtube.com
+facebook.com
+www.facebook.com
 
 
 
