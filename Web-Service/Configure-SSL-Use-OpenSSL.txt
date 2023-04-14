@@ -17,4 +17,109 @@ openssl req -new -nodes -keyout ivanchriana.com.key -out ivanchriana.com.csr
 openssl x509 -req -in ivanchriana.com.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out ivanchriana.com.crt -days 365 -sha256
 
 
+=============================================== CARA KEDUA ====================================================
+
+Create Certificate Authority(CA) with OpenSSL Web Server Apache2 di Ubuntu 22.04
+
+Make directory for CA, example in /root/CA or home directory for root user
+
+root@security:~# mkdir -p CA
+
+root@security:~# cd CA/
+
+root@security:~/CA# 
+
+Generate new CA Certificate
+root@security:~/CA# openssl req -x509 -nodes -new -keyout rootCA.key -days 365 -sha256 -out rootCA.pem
+.+...+....+......+.....+......+....+.........+..+.+..+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.........+.+..+..........+..+......+....+...+...+.....+.+.....+......+.......+..+.+........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.....+...+....+...............+......+.....+.+...........+....+......+........+............+...+.......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+...+.+...+..+....+...+..............................+......+..+............+...+.......+...+..+.+..+....+........+......+......+...+...+.......+........+.......+...+.....+.........+...+...+....+...+......+..+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+...........+.+......+...+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+................+...+...+.....+.............+..+...............+....+..............+....+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:ID
+State or Province Name (full name) [Some-State]:Jawa Barat
+Locality Name (eg, city) []:DKI Jakarta    
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:ID-Networkers
+Organizational Unit Name (eg, section) []:IDN
+Common Name (e.g. server FQDN or YOUR name) []:ivanchriana.com
+Email Address []:webmaster@ivanchriana.com
+
+Khusus untuk Common Name (CN), sesuaikan dengan Domain Server Kalian.
+
+Generate CSR for Signing Request to CA
+root@security:~/CA# openssl req -new -nodes -keyout ivanchriana.com.key -out ivanchriana.com.csr
+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*......+............+.......+.........+.....+.+...+..+.+...+...........+...+......+.......+..+..........+...+.....+.........+......+.......+......+.....+................+...+............+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*....+.....+............+...+.+..............+..........+..+....+.....+.+..+...+....+...+.......................+.......+.....+.+.....+................+.....+...+...............+.......+........+..........+...+...+............+....................+...+....+...+........+.+...+............+.....+....+...........+.+..+..........+........+..........+...+.........+......+..+...+...............+......................+.....+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+...+....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*...........+.........+...+.....+.........+...+...+...+.+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*......+.................+.......+.....+...+...+....+......+........+.......+.....+.......+..................+..+......+....+..+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:ID
+State or Province Name (full name) [Some-State]:Jawa Barat
+Locality Name (eg, city) []:DKI Jakarta
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:ID-Networkers
+Organizational Unit Name (eg, section) []:IDN
+Common Name (e.g. server FQDN or YOUR name) []:ivanchriana.com
+Email Address []:webmaster@ivanchriana.com
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []: [ENTER]
+An optional company name []: [ENTER]
+
+Khusus untuk Common Name (CN), sesuaikan dengan Domain Server Kalian.
+
+Signing Certificate CSR
+root@security:~/CA# openssl x509 -req -in ivanchriana.com.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out ivanchriana.com.crt -days 365 -sha256
+
+Certificate request self-signature ok
+subject=C = ID, ST = Jawa Barat, L = DKI Jakarta, O = ID-Networkers, OU = IDN, CN = ivanchriana.com, emailAddress = webmaster@ivanchriana.com
+
+
+
+Apache Setup
+root@security:~# vi /etc/apache2/sites-available/default-ssl.conf
+
+# Cari Pada Bagian berikut : (Ubah Path SSLCertificateFile dan SSLCertificateKeyFile)
+#   A self-signed (snakeoil) certificate can be created by installing
+                #   the ssl-cert package. See
+                #   /usr/share/doc/apache2/README.Debian.gz for more info.
+                #   If both key and certificate are stored in the same file, only the
+                #   SSLCertificateFile directive is needed.
+                SSLCertificateFile      /root/CA/ivanchriana.com.crt
+                SSLCertificateKeyFile /root/CA/ivanchriana.com.key
+
+Restart Service Apache
+root@security:~# systemctl restart apache2
+
+Untuk Aktifkan HTTPS :
+root@security:~# a2ensite default-ssl.conf 
+Enabling site default-ssl.
+To activate the new configuration, you need to run:
+  systemctl reload apache2
+
+Untuk Aktifkan module SSL :
+root@security:~# a2enmod ssl 
+Considering dependency setenvif for ssl:
+Module setenvif already enabled
+Considering dependency mime for ssl:
+Module mime already enabled
+Considering dependency socache_shmcb for ssl:
+Enabling module socache_shmcb.
+Enabling module ssl.
+See /usr/share/doc/apache2/README.Debian.gz on how to configure SSL and create self-signed certificates.
+To activate the new configuration, you need to run:
+  systemctl restart apache2
+
+Restart Service Apache
+root@security:~# systemctl restart apache2
 
