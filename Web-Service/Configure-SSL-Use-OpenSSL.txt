@@ -123,3 +123,20 @@ To activate the new configuration, you need to run:
 Restart Service Apache
 root@security:~# systemctl restart apache2
 
+
+
+Penjelasan :
+Setelah Anda memasukkan perintah, Anda akan dibawa ke prompt di mana Anda dapat memasukkan informasi tentang situs web Anda. Sebelum kita membahasnya, mari kita lihat apa yang terjadi dalam perintah yang kami terbitkan:
+
+openssl: Ini adalah alat baris perintah untuk membuat dan mengelola sertifikat, kunci, dan file OpenSSL lainnya.
+req -x509: Ini menentukan bahwa kami ingin menggunakan permintaan penandatanganan sertifikat X.509 ( CSR ) manajemen. X.509 adalah standar infrastruktur kunci publik yang dipatuhi TLS untuk manajemen kunci dan sertifikat.
+-nodes: Ini memberitahu OpenSSL untuk melewatkan opsi untuk mengamankan sertifikat kami dengan frasa sandi. Kami membutuhkan Apache untuk dapat membaca file, tanpa campur tangan pengguna, ketika server mulai. Sebuah frasa sandi akan mencegah hal ini terjadi, karena kita harus memasukkannya setelah setiap restart.
+-days 365: Opsi ini menetapkan lamanya waktu sertifikat dianggap valid. Kami mengaturnya selama satu tahun di sini. Banyak browser modern akan menolak sertifikat apa pun yang berlaku lebih dari satu tahun.
+-newkey rsa:2048: Ini menentukan bahwa kami ingin menghasilkan sertifikat baru dan kunci baru secara bersamaan. Kami tidak membuat kunci yang diperlukan untuk menandatangani sertifikat pada langkah sebelumnya, jadi kami harus membuatnya bersama dengan sertifikat. Itu rsa:2048 bagian memberitahu itu untuk membuat kunci RSA yang panjangnya 2048 bit.
+-keyout: Baris ini memberi tahu OpenSSL di mana harus menempatkan file kunci pribadi yang dihasilkan yang kami buat.
+-out: Ini memberitahu OpenSSL di mana menempatkan sertifikat yang kami buat.
+
+
+
+
+
