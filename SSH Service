@@ -1,0 +1,75 @@
+SSH Service
+Installasi OpenSSH Server
+root@SERVER-01:~# apt install openssh-server -y
+
+Remote SSH Server
+Remote ssh dengan putty :
+masukkan IP atau hostnya : root@192.x.x.x Port : 22 
+Change Port Default SSH Server :
+nano /etc/ssh/sshd_conﬁg
+
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented. Uncommented options override the # default value.
+
+Include /etc/ssh/sshd_conﬁg.d/*.conf
+
+Port 1337        #disini saya kasih contoh ganti ke port 1337
+#AddressFamily any 
+#ListenAddress 0.0.0.0 
+#ListenAddress ::
+
+Restart service ssh
+root@SERVER-01:~# systemctl restart ssh
+
+Kita coba login kembali menggunakan port yang baru
+ssh SRV1@192.168.43.36 -p 1337
+
+Transfer File menggunakan SSH
+Ada dua cara, menggunakan CLI atau GUI
+
+Menggunakan CLI
+
+Copy ﬁle dari srv1 menuju srv2 (upload)
+scp namaﬁle.txt SRV2@192.168.43.38:/home/srv2/
+Download ﬁle dari srv2 ke srv1 (download)
+scp SRV2@192.168.43.38:/home/srv2/text1.txt ~/
+
+Menggunakan GUI (WinSCP)
+Buka WinSCP, lalu pilih protokol SCP dan masukkan IP server dan kredensial
+
+Akses SSH Tanpa Password :
+Pertama kita perlu membuat pasangan private dan public key, yang berfungsi sebagai identitas ketika kita login, jadi hanya yang mempunyai private key yang bisa mengakses server kita(lebih aman dari password)
+
+Generate Key di Linux :
+ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter ﬁle in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase): KOSONGKAN
+Enter same passphrase again: KOSONGKAN
+
+Lokasi private dan public :
+ls ~/.ssh
+authorized_keys id_rsa id_rsa.pub known_hosts
+Menyalin Public key ke server yang mau diremote :
+
+ssh-copy-id root@192.168.43.38
+
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub" The authenticity of host '10.23.1.122 (10.23.1.122)' can't be established.
+ECDSA key ﬁngerprint is SHA256:HWAFsCiSh2TH78E66fI0lItf1T2SVR+05maTmbMuhNc.
+Are you sure you want to continue connecting (yes/no/[ﬁngerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to ﬁlter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@192.168.43.38's password: password user
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with: "ssh 'root@192.168.43.38'" and check to make sure that only the key(s) you wanted were added.
+
+Generate Key di Windows (Putty)
+Buka puttygen lalu klik Generate, gerak-gerakkan kursor sampai key berhasil di generate
+
+
+
+
+
+
