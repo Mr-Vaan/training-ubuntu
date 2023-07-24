@@ -2,6 +2,29 @@
 
 
 
+/(Root Directory): Semua direktori dan file lainnya ada di bawah direktori root.
+
+/bin (Binary Programs): Direktori ini berisi program penting untuk menjalankan sistem dan penggunaan. Program di direktori ini dapat diakses oleh semua user.
+
+/boot (Boot Loader Files): Direktori ini berisi file yang diperlukan saat proses booting sistem, termasuk kernel Linux, konfigurasi boot loader, dan file yang berhubungan dengan proses booting.
+
+/dev (Device Files): Direktori ini berisi file yang mewakili perangkat-perangkat di sistem, seperti hard drive, printer, keyboard, dan lainnya. File di direktori ini digunakan untuk berinteraksi dengan perangkat-perangkat tersebut.
+
+/etc (System Configuration Files): Direktori ini berisi file konfigurasi sistem yang diperlukan oleh berbagai layanan dan program di sistem. File-file di sini mengatur pengaturan global sistem, seperti pengaturan jaringan, pengaturan layanan, konfigurasi pengguna, dan lainnya.
+
+/home (User Home Directories): Direktori ini berisi untuk setiap user di dalam sistem. Setiap user memiliki direktori home terpisah di bawah /home, yang digunakan untuk menyimpan file pribadi dan pengaturan user.
+
+/lib (Shared Libraries): Direktori ini berisi pustaka-pustaka (libraries) yang diperlukan oleh program-program di sistem. Pustaka-pustaka ini digunakan untuk menyediakan fungsi-fungsi yang umum digunakan oleh program-program di sistem.
+
+/media (Removable Media): Direktori ini digunakan untuk mengaitkan perangkat media yang dapat dilepas, seperti CD/DVD-ROM, USB drive, dan lainnya. Ketika media dilepas, direktori di sini akan digunakan sebagai titik pemasangan (mount point).
+
+/opt (Optional Packages): Direktori ini digunakan untuk menginstal paket-paket tambahan yang tidak termasuk dalam instalasi standar sistem. Paket-paket di sini seringkali ditempatkan dalam subdirektori dengan nama paket masing-masing.
+
+/usr (User Programs): Direktori ini berisi program-program dan file-file yang digunakan oleh pengguna/user dan administrator. Struktur direktori di dalam /usr mirip dengan struktur direktori root.
+
+/var (Variable Data): Direktori ini berisi data yang bervariasi, seperti file log sistem, file cache, database, file spool printer, dan lainnya. File-file di sini dapat berubah ukurannya seiring waktu penggunaan sistem.
+
+/tmp (Temporary Files): Direktori ini digunakan untuk menyimpan file sementara yang dibutuhkan oleh program-program dalam waktu singkat. File-file di direktori ini dapat dihapus secara otomatis setelah penggunaan selesai.
 
 
 
