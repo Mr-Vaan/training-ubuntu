@@ -7,3 +7,108 @@ whoami = Untuk mencetak output user/pengguna yang sedang login.
 
 
 
+
+Membuat Banyak File Sekali Menggunakan Perintah sentuh
+Ketika Anda telah memutuskan untuk membuat banyak file di sistem Linux Anda, yang Anda butuhkan hanyalah perintah bahwa Anda pasti akan menemukan di sistem Anda, dan hal terakhir yang harus Anda ketahui adalah bagaimana Anda ingin menamainya.touch 
+
+Setelah itu, Anda hanya perlu mengikuti sintaks di bawah ini untuk membuat banyak file sekaligus dengan hanya memanggil perintah tunggal.
+
+dengan perintah "touch filename{1..10}.txt"
+contoh :
+$ touch filename{1..100}.txt
+$ touch filename{1..1000}.txt
+$ touch filename{1..10000}.html
+Dengan sedikit perubahan, Anda dapat membuat 100, 1000, atau 10.000 file dalam hitungan detik.
+
+dan perintah lain memiliki batasan tertentu untuk menerima argumen sesuai dengan yang tersedia :
+untuk mengecek limitnya dengan perintah "ulimit -a"
+
+Dalam hal ini, Anda dapat melampaui batas argumen dengan menggunakan “ untuk loop ” untuk membuat banyak file, tetapi ada satu kelemahan untuk menggunakan perintah itu, perlu waktu lama untuk menyelesaikannya.
+
+Membuat Beberapa File Teks dengan ( .txt ) Ekstensi Sekali Menggunakan Perintah :
+$ for i in {1..1000000}; do touch filename$i.txt; done
+
+Di atas, Anda belajar cara membuat banyak file, yang boleh digunakan jika Anda hanya ingin membuang file biasa.
+Di sisi lain, jika Anda ingin membuat file dengan ekstensi tertentu, maka Anda hanya perlu menambahkan nama ekstensi di akhir file.
+
+Membuat Banyak Direktori Sekali Menggunakan Perintah mkdir :
+Secara konvensional, ketika Anda ingin membuat beberapa direktori, Anda mungkin menggunakan perintah di bawah ini, yang sama sekali tidak efisien jika Anda ingin membuat 100 direktori + sekaligus.
+$ mkdir dir1, dir2, dir3
+
+Cara paling efisien untuk membuat beberapa direktori adalah dengan mengeksekusi kode di bawah ini, yang akan membuat sejumlah direktori tertentu dalam sekejap mata.
+$ mkdir directoryName{1..100}
+
+Buat beberapa Direktori dalam subdirektori
+Jika Anda ingin membuat beberapa subdirektori dalam direktori induk, maka Anda dapat menggunakan kode di bawah ini, yang akan membuat total 25 direktori, dan setiap direktori induk akan berisi 10 sub-direktori.
+$ mkdir -p parentdirectory{1..25}/subdirectory{1..10}
+
+Bahkan Anda dapat mencoba ini :
+$ mkdir -p parentdirectory{1..10}/{dirA,dirB,dirC}
+
+Membuat Banyak Direktori di Hierarchal Menggunakan Perintah mkdir
+Ketika Anda ingin membuat beberapa direktori dalam urutan hierarkis, maka Anda harus menggunakan kode di bawah ini, yang akan membuat direktori dalam direktori dalam urutan hierarkis.
+$ mkdir -p par-dir/sub-dir/{sub-dir1,sub-dir2}
+
+Misalnya, jika saya ingin membuat struktur direktori proyek untuk aplikasi Flutter, itu harus seperti ini.
+saya dapat menggunakan kode di bawah ini, yang akan membuat direktori lib / pertama dalam src / di bawah src / fitur /, dan setelah itu, fitur akan mengadakan presentasi, aplikasi, domain, dan data.
+$ mkdir -p lib/src/features/features{presentation,application,domain,data}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Membuat Banyak Folder Dengan Satu Perintah di Linux
+Contoh seperti ini yang ingin kita buat:
+sudo mkdir /home/pemrograman/bash
+sudo mkdir /home/pemrograman/c
+sudo mkdir /home/pemrograman/java
+sudo mkdir /home/pemrograman/javascript
+sudo mkdir /home/pemrograman/ruby
+sudo mkdir /home/pemrograman/ruby/rails
+sudo mkdir /home/pemrograman/python/python2
+sudo mkdir /home/pemrograman/python/python3
+sudo mkdir /home/pemrograman/python/python3/django
+
+dengan perintah ini, akan terbuat sekaligus:
+sudo mkdir -p /home/pemrograman/{bash,c,java,javascript,python/{python2, python3/django},ruby/rails}
+
+gunakan perintah "tree" untuk melihat struktur dari foldernya, apakah sudah benar atau belum. Namun harus diinstall terlebih dahulu.
+
+
+
+
+
+
+
+
+
+
+
+
+
