@@ -2,6 +2,105 @@ Referensi :
 https://www.zytrax.com/books/dns/ch4/
 
 
+DNS MASTER :
+File konﬁgurasi berada di /etc/bind/named.conf.local
+
+zone "system-engineer.com" IN { 
+  type master;
+  #Lokasi ﬁle yang berisi record domain 
+  ﬁle "/etc/bind/db.sysidn";
+  # IP Addres dari DNS Cadangan
+  allow-transfer { 192.168.43.38; };
+};
+
+zone "43.168.192.in-addr.arpa" IN { 
+  type master;
+  #Lokasi ﬁle yang berisi record domain 
+  ﬁle "/etc/bind/db.sysidn-rev";
+  # IP Addres dari DNS Cadangan
+  allow-transfer {192.168.43.38; };
+};
+
+Cek Konﬁgurasi DNS : 
+named-checkconf /etc/bind/named.conf
+
+Buat Record DNS :
+cd /etc/bind
+cp  db.local  db.forward
+cp db.127 db.reverse
+
+Record Forward Zone :
+
+$TTL	604800
+@	IN	SOA	root.system-engineer.com. (
+                  1	; Serial 604800		; Refresh
+              86400	; Retry
+            2419200	; Expire
+          604800 )	; Negative Cache TTL
+;
+@  IN  NS ns1.system-engineer.com.     
+@  IN  A  ns2.system-engineer.com.
+@  IN  A  192.168.43.36
+@  IN  MX 5  mail.system-engineer.com.
+ns1  IN  A  192.168.43.36
+ns2  IN  A  192.168.43.38
+www  IN  CNAME  system-engineer.com.
+blog  IN  CNAME system-engineer.com.
+games  IN  CNAME  system-engineer.com.
+
+Record Reverse Zone :
+
+$TTL	604800
+@	IN	SOA	system-engineer.com. root.system-engineer.com. (
+                1	; Serial 
+          604800  ; Refresh
+            86400	; Retry
+          2419200	; Expire
+        604800 )	; Negative Cache TTL
+
+;
+@                    IN  NS  ns1.system-engineer.com.
+@                    IN  NS  ns2.system-engineer.com.
+36                   IN  PTR  ns1.system-engineer.com.
+38                   IN  PTR  ns2.system-engineer.com.
+36                   IN  PTR  system-engineer.com.
+36                   IN  PTR  www.system-engineer.com.
+36                   IN  PTR  blog.system-engineer.com.
+36                   IN  PTR  mail.system-engineer.com.
+36                   IN  PTR  games.system-engineer.com.
+
+Restart Service DNS :
+systemctl restart bind9
+
+DNS Slave/Cadangan (Server2)
+
+Buat Zone Baru
+Sama seperti di DNS Master, kita buat zone ﬁle dengan mengedit ﬁle /etc/bind/named.conf.local , sesuaikan IP Address master
+
+zone "system-engineer.com" IN { 
+        type slave;
+        ﬁle "/var/cache/bind/db.forward";
+        masters { 192.168.43.36; };
+};
+
+zone "43.168.192.in-addr.arpa" IN { 
+        type slave;
+        ﬁle "/var/cache/bind/db.reverse";
+        masters { 192.168.43.36;  };
+};
+
+Restart Service DNS :
+systemctl restart bind9
+
+
+
+
+
+
+
+
+
+
 
 
 
