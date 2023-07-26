@@ -1,0 +1,34 @@
+
+File Konﬁgurasi berada di /etc/bind/named.conf.options
+
+options {
+  directory "/var/cache/bind";
+  # Mengizinkan DNS server di pakai oleh siapapun allow-query { any; };
+  # Mengizinkan DNS Server mencari server lain recursion yes;
+  # Meneruskan request dns ke server lain (dns resolver/root dns) forwarders {
+    1.1.1.1;
+    8.8.8.8;
+  };
+};
+
+
+Untuk pengujian kita mencoba query dns ke server kita sendiri.
+dig @ipserverdns google.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
