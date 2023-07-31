@@ -1,0 +1,48 @@
+Resize-Extend a disk partition with unallocated disk space in Linux - CentOS, RHEL, Ubuntu, Debian & more..
+
+Extend Logical Volume
+Hal berikutnya yang perlu kita lakukan sekarang adalah memperluas volume logis kita ke ruang itu. Untuk melakukan itu kita perlu mengambil jalurnya, yang dapat dilakukan dengan mengeluarkan perintah berikut:
+
+root@SERVER-01:~# lvdisplay -v
+
+Itu harus menjadi yang pertama dari daftar: namun, kita dapat dengan mudah mengetahui apa itu dengan melihat ukuran volumenya. Dalam skenario di atas, jalurnya adalah /dev/ubuntu-vg/ubuntu-lv.
+
+Setelah diambil, kita dapat memperluas volume logis tersebut dengan perintah berikut:
+
+root@SERVER-01:~# lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+
+Extend the File System
+Sekarang volume logis telah berhasil diperluas untuk menggunakan semua ruang yang tidak terisi, kita masih harus melakukan satu langkah terakhir: tingkatkan sistem file agar sesuai dengan ukuran volume logis. Melakukannya semudah mengetik salah satu perintah berikut, tergantung apakah kita menggunakan EXT4 (yang seharusnya menjadi default saat ini) atau XFS. Sekali lagi, kita harus menggunakan jalur volume logis di sini, yang sama dengan yang kita gunakan dengan perintah lvextend beberapa saat yang lalu.
+
+Untuk type EXT4, Ikuti yang ini :
+
+root@SERVER-01:~# resize2fs /dev/ubuntu-vg/ubuntu-lv
+
+Untuk type XFS, Ikuti yang ini :
+
+root@SERVER-01:~# xfs_growfs /root
+
+Ini akan memicu pengubahan ukuran sistem file secara online, yang akan diperluas untuk menggunakan semua ruang volume logis yang tersedia.
+
+Dan hanya itu saja! Saya harap postingan ini akan membantu lebih banyak System Administrator dalam bekerja dengan sistem Linux.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
