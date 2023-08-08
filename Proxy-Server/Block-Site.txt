@@ -6,6 +6,10 @@ touch /etc/squid/blacklisted_sites.acl
 
 .facebook.com
 .twitter.com
+youtube.com
+.youtube.com
+dicoding.com
+.dicoding.com
 
 ESC -> :wq -> untuk ngesave
 
@@ -100,13 +104,13 @@ facebook.com
 www.facebook.com
 
 
+Bisa Juga Seperti Ini : (Isi untuk file Squid.conf)
+acl mynet src 192.168.43.0/24
+acl blocked dstdomain "/etc/squid/list-domain"
 
-
-
-
-
-
-
+http_access deny blocked
+http_access allow mynet
+http_access deny all
 
 
 
