@@ -30,9 +30,9 @@ defaults
         mode    http
         option  httplog
         option  dontlognull
-        timeout connect 5000
-        timeout client  50000
-        timeout server  50000
+        timeout connect 50000
+        timeout client  500000
+        timeout server  500000
         errorfile 400 /etc/haproxy/errors/400.http
         errorfile 403 /etc/haproxy/errors/403.http
         errorfile 408 /etc/haproxy/errors/408.http
@@ -44,24 +44,31 @@ defaults
 frontend http
         bind *:9000
         bind *:443
+        mode http
         default_backend backend_servers
         option  forwardfor
 
 backend backend_servers
+        mode http
         balance roundrobin
         server  srv1    10.23.2.76:80   check
         server  srv2    10.23.2.67:80   check
 
 # Untuk ENable Statistic HAProxy
         stats   enable
+        stats   hide-version
+        stats   show-node
         stats   auth    user:pass
-        stats   refresh 60s
+        stats   refresh 30s
         stats   uri     /haproxy?stats
+
+
+
 
 restart haproxy :
 systemctl restart haproxy
 
-
+Jangan Lupa Apache Port di Server 3 nya Diubah dahulu sebelum di test
 
 
 
