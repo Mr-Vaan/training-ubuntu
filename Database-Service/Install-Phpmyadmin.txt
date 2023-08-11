@@ -120,10 +120,14 @@ Konfigurasi paket
    │                                                                                                      │
    └──────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
+Setelah menginstall, konfigurasi file phpmyadmin dahulu :
 
+vi /etc/phpmyadmin/apache.conf
+# line 8 : set access permission
+Require ip 127.0.0.1 0.0.0.0/24 atau => (0.0.0.0/0)
 
-
-
+restart apache: 
+systemctl restart apache2.service
 
 
 
