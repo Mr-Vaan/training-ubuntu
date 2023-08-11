@@ -177,9 +177,13 @@ Require valid-user: Ini menentukan bahwa hanya pengguna yang diautentikasi yang 
 
 htpasswd -c /etc/phpmyadmin/.htpasswd ivan
 
+Jika Anda ingin memasukkan pengguna tambahan, Anda harus melakukannya tanpa itu -c bendera, seperti ini:
+
+sudo htpasswd /etc/phpmyadmin/.htpasswd additionaluser
+
 systemctl restart apache2
 
-
+https://domain_name_or_IP/phpmyadmin
 
 
 
