@@ -131,9 +131,21 @@ systemctl restart apache2.service
 
 
 
+MEMBUAT USER ALL PRIVILEGES ATAU SEPERTI ROOT DI DATABASE : 
 
+MariaDB [(none)]> create user ivan;
+Query OK, 0 rows affected (0.004 sec)
 
+MariaDB [(none)]> CREATE USER 'ivan'@'localhost' IDENTIFIED BY 'password';
+Query OK, 0 rows affected (0.014 sec)
 
+MariaDB [(none)]> GRANT ALL ON *.* TO 'ivan'@'localhost';
+Query OK, 0 rows affected (0.045 sec)
+
+MariaDB [(none)]> flush privileges;
+Query OK, 0 rows affected (0.002 sec)
+
+MariaDB [(none)]>
 
 
 
