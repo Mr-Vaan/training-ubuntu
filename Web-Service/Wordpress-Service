@@ -1,0 +1,187 @@
+Install Wordpress :
+
+pake wget buat install wordpressnya
+root@SERVER:~# wget https://wordpress.org/latest.tar.gz
+
+Extract Isi dari Folder wordpress yang sudah di download tadi :
+root@SERVER:~# tar zxvf latest.tar.gz -C /var/www/
+root@SERVER:~# chown -R www-data. /var/www/wordpress
+
+Install php :
+root@SERVER:~# apt -y install php8.1 php8.1-mbstring php-pear
+
+untuk melihat versi :
+root@SERVER:~# php -v
+PHP 8.1.2 (cli) (built: Apr  7 2022 17:46:26) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.1.2, Copyright (c) Zend Technologies
+    with Zend OPcache v8.1.2, Copyright (c), by Zend Technologies
+
+# verify installation to create a test script
+root@SERVER~# echo '<?php echo `php -i`."\n"; ?>' > php_test.php
+
+
+Melihat service php :
+root@SERVER:~# php php_test.php | head
+phpinfo()
+PHP Version => 8.1.2
+
+System => Linux dlp.srv.world 5.15.0-25-generic #25-Ubuntu SMP Wed Mar 30 15:54:22 UTC 2022 x86_64
+Build Date => Apr  7 2022 17:46:26
+Build System => Linux
+Server API => Command Line Interface
+Virtual Directory Support => disabled
+Configuration File (php.ini) Path => /etc/php/8.1/cli
+Loaded Configuration File => /etc/php/8.1/cli/php.ini
+
+Install php fpm :
+root@SERVER:~# apt -y install php-fpm
+
+Add Settings in Virtualhost you'd like to set PHP-FPM :
+root@SERVER:~# cd /etc/apache2/sites-available/000-default.conf
+# add into <VirtualHost> - </VirtualHost>
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/var/run/php/php8.1-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+root@SERVER:~# cd /etc/apache2/sites-available/000-default.conf
+# add into <VirtualHost> - </VirtualHost>
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/var/run/php/php8.1-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+
+root@SERVER:~# a2enmod proxy_fcgi setenvif
+Considering dependency proxy for proxy_fcgi:
+Enabling module proxy.
+Enabling module proxy_fcgi.
+Module setenvif already enabled
+To activate the new configuration, you need to run:
+  systemctl restart apache2
+
+root@SERVER:~# a2enconf php8.1-fpm
+Enabling conf php8.1-fpm.
+To activate the new configuration, you need to run:
+  systemctl reload apache2
+
+root@SERVER:~# systemctl restart php8.1-fpm apache2
+
+Create [phpinfo] in Virtualhost's web-root you set PHP-FPM and access to it, then that's OK if [FPM/FastCGI] is displayed :
+
+root@SERVER:~# echo '<?php phpinfo(); ?>' > /var/www/html/info.php
+
+
+Install other required PHP modules :
+root@SERVER:~# apt -y install php-common php-gd php-mysql php-enchant hunspell
+
+root@SERVER:~# vi /etc/php/8.1/fpm/pool.d/www.conf
+# add to the end
+# maybe you need to configure parameters below for your usage
+php_value[max_execution_time] = 600
+php_value[memory_limit] = 2G
+php_value[post_max_size] = 2G
+php_value[upload_max_filesize] = 2G
+php_value[max_input_time] = 600
+php_value[max_input_vars] = 2000
+php_value[date.timezone] = Asia/Jakarta
+
+root@SERVER:~# systemctl restart php8.1-fpm
+
+Create User and Database on MariaDB for WordPress :
+
+root@SERVER:~# mysql
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 37
+Server version: 10.6.7-MariaDB-2ubuntu1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> create database wordpress; 
+Query OK, 1 row affected (0.00 sec)
+
+MariaDB [(none)]> grant all privileges on wordpress.* to wordpress@'localhost' identified by 'password'; 
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> flush privileges; 
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> exit 
+Bye
+
+Configure Apache2 for WordPress :
+
+root@SERVER:~# chown -R www-data. /var/www/wordpress
+root@SERVER:~# vi /etc/apache2/conf-available/wordpress.conf
+# create new
+Timeout 600
+ProxyTimeout 600
+
+Alias /wordpress "/var/www/wordpress/"
+DirectoryIndex index.php index.html index.htm
+<Directory "/var/www/wordpress">
+    Options FollowSymLinks
+    AllowOverride All
+    Require all granted
+
+    <FilesMatch \.(php|phar)$>
+        SetHandler "proxy:unix:/var/run/php/php8.1-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+</Directory>
+
+root@SERVER:~# a2enconf php8.1-fpm security
+Conf php8.1-fpm already enabled
+Conf security already enabled
+root@SERVER:~# a2ensite blog.conf
+Enabling site blog.
+To activate the new configuration, you need to run:
+  systemctl reload apache2
+root@SERVER:~# systemctl reload apache2.service
+
+Access to the URL [https://(Server's Hostname or IP address)/wordpress/] with Web browser on any Client, then following screen is displayed. Click [Let's go!] button.
+
+Test DNS SERVER :
+dig manusiaedu.id +short
+dig manusiaedu.id
+
+dig mail.manusiaedu.id +short
+dig mail.manusiaedu.id
+
+dig manusiaedu.id MX +short
+dig manusiaedu.id MX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
