@@ -1,0 +1,220 @@
+=================== POSTFIX CONFIGURE =====================
+
+
+Install Postfix :
+root@SERVER:~# apt -y install postfix sasl2-bin
+
+Package configuration
+
+              ┌───────────────────────────┤ Postfix Configuration ├───────────────────────────┐
+              │ Please select the mail server configuration type that best meets your needs.  │
+              │                                                                               │
+              │  No configuration:                                                            │
+              │   Should be chosen to leave the current configuration unchanged.              │
+              │  Internet site:                                                               │
+              │   Mail is sent and received directly using SMTP.                              │
+              │  Internet with smarthost:                                                     │
+              │   Mail is received directly using SMTP or by running a utility such           │
+              │   as fetchmail. Outgoing mail is sent using a smarthost.                      │
+              │  Satellite system:                                                            │
+              │   All mail is sent to another machine, called a 'smarthost', for              │
+              │   delivery.                                                                   │
+              │  Local only:                                                                  │
+              │   The only delivered mail is the mail for local users. There is no            │
+              │   network.                                                                    │
+              │                                                                               │
+              │ General mail configuration type:                                              │
+              │                                                                               │
+              │                           No configuration                                    │
+              │                           *Internet Site                                      │
+              │                           Internet with smarthost                             │
+              │                           Satellite system                                    │
+              │                           Local only                                          │
+              │                                                                               │
+              │                                                                               │
+              │                     <*Ok>                         <Cancel>                    │
+              │                                                                               │
+              └───────────────────────────────────────────────────────────────────────────────┘
+
+
+
+ ┌────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────┐
+ │ The 'mail name' is the domain name used to 'qualify' _ALL_ mail addresses without a domain name. This   │
+ │ includes mail to and from <root>: please do not make your machine send out mail from root@example.org   │
+ │ unless root@example.org has told you to.                                                                │
+ │                                                                                                         │
+ │ This name will also be used by other programs. It should be the single, fully qualified domain name     │
+ │ (FQDN).                                                                                                 │
+ │                                                                                                         │
+ │ Thus, if a mail address on the local host is foo@example.org, the correct value for this option would   │
+ │ be example.org.                                                                                         │
+ │                                                                                                         │
+ │ System mail name:                                                                                       │
+ │                                                                                                         │
+ │ admin@manusiaedu.id____________________________________________________________________________________ │
+ │                                                                                                         │
+ │                              <Ok>                                  <Cancel>                             │
+ │                                                                                                         │
+ └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+
+ ┌───────────────────────────────────────┤ Pending kernel upgrade ├────────────────────────────────────────┐
+ │                                                                                                         │
+ │ Newer kernel available                                                                                  │
+ │                                                                                                         │
+ │ The currently running kernel version is 5.15.0-43-generic which is not the expected kernel version      │
+ │ 5.15.0-78-generic.                                                                                      │
+ │                                                                                                         │
+ │ Restarting the system to load the new kernel will not be handled automatically, so you should consider  │
+ │ rebooting.                                                                                              │
+ │                                                                                                         │
+ │                                                 <*Ok>                                                   │
+ │                                                                                                         │
+ └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+
+                               ┌────┤ Daemons using outdated libraries ├─────┐
+                               │                                             │
+                               │                                             │
+                               │ Which services should be restarted?         │
+                               │                                             │
+                               │    [*] apache2.service                      │
+                               │    [ ] dbus.service                         │
+                               │    [ ] networkd-dispatcher.service          │
+                               │    [*] packagekit.service                   │
+                               │    [ ] systemd-logind.service               │
+                               │    [ ] unattended-upgrades.service          │
+                               │    [ ] user@0.service                       │
+                               │    [*] zabbix-agent.service                 │
+                               │                                             │
+                               │                                             │
+                               │          <*Ok>             <Cancel>         │
+                               │                                             │
+                               └─────────────────────────────────────────────┘
+
+
+cp /usr/share/postfix/main.cf.dist /etc/postfix/main.cf
+
+vi /etc/postfix/main.cf
+# line 78 : uncomment
+mail_owner = postfix
+
+# line 94 : uncomment and specify hostname
+myhostname = mail.srv.world
+
+# line 102 : uncomment and specify domainname
+mydomain = srv.world
+
+# line 123 : uncomment
+myorigin = $mydomain
+
+# line 137 : uncomment
+inet_interfaces = all
+
+# line 185 : uncomment
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+
+# line 228 : uncomment
+local_recipient_maps = unix:passwd.byname $alias_maps
+
+# line 270 : uncomment
+mynetworks_style = subnet
+
+# line 287 : add your local network
+mynetworks = 127.0.0.0/8, 0.0.0.0/24, 192.168.43.0/24 
+
+# line 407 : uncomment
+alias_maps = hash:/etc/aliases
+
+# line 418 : uncomment
+alias_database = hash:/etc/aliases
+
+# line 440 : uncomment
+home_mailbox = Maildir/
+
+# line 576: comment out and add
+#smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+smtpd_banner = $myhostname ESMTP
+
+# line 650 : add
+sendmail_path = /usr/sbin/postfix
+
+# line 655 : add
+newaliases_path = /usr/bin/newaliases
+
+# line 660 : add
+mailq_path = /usr/bin/mailq
+
+# line 666 : add
+setgid_group = postdrop
+
+# line 670 : add
+#html_directory =
+
+# line 674 : comment out
+#manpage_directory =
+
+# line 679 : comment out
+#sample_directory =
+
+# line 683 : comment out
+#readme_directory =
+
+# line 684 : if also listen IPv6, change to [all]
+inet_protocols = ipv4
+
+# add follows to the end
+# disable SMTP VRFY command
+disable_vrfy_command = yes
+
+# require HELO command to sender hosts
+smtpd_helo_required = yes
+
+# limit an email size
+# example below means 10M bytes limit
+message_size_limit = 10240000
+
+# SMTP-Auth settings
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+smtpd_recipient_restrictions = permit_mynetworks, permit_auth_destination, permit_sasl_authenticated, reject
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
