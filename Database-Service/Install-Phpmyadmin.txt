@@ -149,23 +149,35 @@ MariaDB [(none)]>
 
 
 
+Mengamankan Service Phpmyadmin :
+vi /etc/apache2/conf-available/phpmyadmin.conf
+
+Menambahkan AllowOverride All arahan dalam <Directory /usr/share/phpmyadmin> bagian dari file konfigurasi, seperti ini:
+
+<Directory /usr/share/phpmyadmin>
+    Options SymLinksIfOwnerMatch
+    DirectoryIndex index.php
+    AllowOverride All
+</Directory>
+
+systemctl restart apache2
+
+vi /usr/share/phpmyadmin/.htaccess
+AuthType Basic
+AuthName "Restricted Files"
+AuthUserFile /etc/phpmyadmin/.htpasswd
+Require valid-user
+
+Penjelasan Singkat :
+AuthType Basic: Baris ini menentukan jenis otentikasi yang Anda laksanakan. Jenis ini akan menerapkan otentikasi kata sandi menggunakan file kata sandi.
+AuthName: Ini mengatur pesan untuk kotak dialog otentikasi. Anda harus menyimpan generik ini sehingga pengguna yang tidak sah tidak akan mendapatkan informasi apa pun tentang apa yang dilindungi.
+AuthUserFile: Ini mengatur lokasi file kata sandi yang akan digunakan untuk otentikasi. Ini harus di luar direktori yang sedang dilayani. Kami akan segera membuat file ini.
+Require valid-user: Ini menentukan bahwa hanya pengguna yang diautentikasi yang harus diberi akses ke sumber daya ini. Inilah yang sebenarnya menghentikan pengguna yang tidak sah untuk masuk.
 
 
+htpasswd -c /etc/phpmyadmin/.htpasswd ivan
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+systemctl restart apache2
 
 
 
