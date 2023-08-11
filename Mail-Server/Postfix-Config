@@ -106,10 +106,10 @@ vi /etc/postfix/main.cf
 mail_owner = postfix
 
 # line 94 : uncomment and specify hostname
-myhostname = mail.srv.world
+myhostname = mail.manusiaedu.id
 
 # line 102 : uncomment and specify domainname
-mydomain = srv.world
+mydomain = manusiaedu.id
 
 # line 123 : uncomment
 myorigin = $mydomain
