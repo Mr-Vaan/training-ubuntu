@@ -1,0 +1,64 @@
+	
+Add Mail User Accounts to use Mail Service.
+
+# install mail client
+root@SERVER-01:~# apt -y install mailutils
+# set environment variables to use Maildir
+root@SERVER-01:~# echo 'export MAIL=$HOME/Maildir/' >> /etc/profile.d/mail.sh
+# add an OS user [ubuntu]
+root@SERVER-01:~# adduser ubuntu
+
+
+	Login as a user added in [1] and try to send an email.
+
+# send to myself [mail (username)@(hostname)]
+ubuntu@SERVER-01:~$ mail ubuntu@localhost
+# input Cc
+Cc:
+# input subject
+Subject: Test Mail #1
+# input messages
+This is the first mail.
+
+# to finish messages, push [Ctrl + D] key
+
+# see received emails
+ubuntu@SERVER-01:~$ mail
+"/home/ubuntu/Maildir/": 1 message 1 new
+>N   1 ubuntu             Tue May 17 00:28  13/448   Test Mail #1
+
+# input the number you'd like to see an email
+? 1
+Return-Path: <ubuntu@mail.manusiaedu.id>
+X-Original-To: ubuntu@localhost
+Delivered-To: ubuntu@localhost
+Received: by mail.manusiaedu.id (Postfix, from userid 1000)
+        id 48DD0A118B; Tue, 17 May 2022 00:28:19 +0000 (UTC)
+To: <ubuntu@localhost>
+Subject: Test Mail #1
+User-Agent: mail (GNU Mailutils 3.14)
+Date: Tue, 17 May 2022 00:28:19 +0000
+Message-Id: <20220517002819.48DD0A118B@mail.srv.world>
+From: ubuntu <ubuntu@mail.manusiaedu.id>
+
+This is the first mail.
+
+# to quit, input [q]
+? q
+Saved 1 message in /home/ubuntu/mbox
+Held 0 messages in /home/ubuntu/Maildir/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
