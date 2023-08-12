@@ -1,0 +1,128 @@
+Create a Database for RoundCube :
+
+root@SERVER-01:~# mysql
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 37
+Server version: 10.6.7-MariaDB-2ubuntu1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+# create [roundcube] database
+# replace [password] to your own password you'd like to set
+MariaDB [(none)]> create database roundcube; 
+Query OK, 1 row affected (0.00 sec)
+
+MariaDB [(none)]> grant all privileges on roundcube.* to roundcube@'localhost' identified by 'password'; 
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> flush privileges; 
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> exit 
+Bye
+
+Install and Configure RoundCube :
+
+root@www:~# apt -y install roundcube roundcube-mysql
+# select [No] on this example (set manually later)
+ +----------------------+ Configuring roundcube-core +-----------------------+
+ |                                                                           |
+ | The roundcube package must have a database installed and configured       |
+ | before it can be used.  This can be optionally handled with               |
+ | dbconfig-common.                                                          |
+ |                                                                           |
+ | If you are an advanced database administrator and know that you want to   |
+ | perform this configuration manually, or if your database has already      |
+ | been installed and configured, you should refuse this option.  Details    |
+ | on what needs to be done should most likely be provided in                |
+ | /usr/share/doc/roundcube.                                                 |
+ |                                                                           |
+ | Otherwise, you should probably choose this option.                        |
+ |                                                                           |
+ | Configure database for roundcube with dbconfig-common?                    |
+ |                                                                           |
+ |                    <Yes>                      <*No>                       |
+ |                                                                           |
+ +---------------------------------------------------------------------------+
+
+root@SERVER-01:~# cd /usr/share/dbconfig-common/data/roundcube/install
+root@SERVER-01:/usr/share/dbconfig-common/data/roundcube/install# mysql -u roundcube -D roundcube -p < mysql
+Enter password:   # MariaDB roundcube [password]
+
+root@SERVER-01:/usr/share/dbconfig-common/data/roundcube/install# cd
+root@SERVER-01:~# vi /etc/roundcube/debian-db.php
+
+# set database info
+$dbuser='roundcube';
+$dbpass='password';
+$basepath='';
+$dbname='roundcube';
+$dbserver='localhost';
+$dbport='3306';
+$dbtype='mysql';
+
+root@SERVER-01:~# vi /etc/roundcube/config.inc.php
+# line 36 : specify IMAP server (STARTTLS setting)
+$config['default_host'] = 'manusiaedu.id';
+# line 50 : specify SMTP server (STARTTLS setting)
+$config['smtp_server'] = 'mail.manusiaedu.id';
+# line 53 : specify SMTP port (STARTTLS setting)
+$config['smtp_port'] = 587;
+# line 57 : change (use the same user for SMTP auth and IMAP auth)
+$config['smtp_user'] = '%u';
+# line 61 : change (use the same password for SMTP auth and IMAP auth)
+$config['smtp_pass'] = '%p';
+# line 68 : change to any title you like
+$config['product_name'] = 'Webmail ManusiaEdu Tech';
+# add follows to the end
+# specify IMAP port (STARTTLS setting)
+$config['default_port'] = 143;
+
+# specify SMTP auth type
+$config['smtp_auth_type'] = 'LOGIN';
+
+# specify SMTP HELO host
+$config['smtp_helo_host'] = 'mail.manusiaedu.id';
+
+# specify domain name
+$config['mail_domain'] = 'manusiaedu.id';
+
+# specify UserAgent
+$config['useragent'] = 'Webmail ManusiaEdu Tech';
+
+# specify SMTP and IMAP connection option
+$config['imap_conn_options'] = array(
+  'ssl'         => array(
+    'verify_peer' => true,
+    'CN_match' => 'manusiaedu.id',
+    'allow_self_signed' => true,
+    'ciphers' => 'HIGH:!SSLv2:!SSLv3',
+  ),
+);
+$config['smtp_conn_options'] = array(
+  'ssl'         => array(
+    'verify_peer' => true,
+    'CN_match' => 'manusiaedu.id',
+    'allow_self_signed' => true,
+    'ciphers' => 'HIGH:!SSLv2:!SSLv3',
+  ),
+);
+
+root@SERVER-01:~# vi /etc/apache2/conf-enabled/roundcube.conf
+# line 3 : uncomment
+Alias /roundcube /var/lib/roundcube/public_html
+# line 11 : change access permission if need
+Require ip 127.0.0.1 192.168.43.0/24
+root@SERVER-01:~# systemctl restart apache2.service
+
+
+
+
+
+
+
+
+
+
