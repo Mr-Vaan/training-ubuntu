@@ -1,0 +1,70 @@
+
+Mengatasi Masalah Roundcube "Connection to storage server failed"
+
+Roundcube merupakan aplikasi webmail yang cukup populer saat ini, dikarenakan antar mukanya yang user friendly dan mudah operasionalnya. Namun, pada saat user hendak login webmail roundcube muncul error “Connection to storage server failed” dan menurut hasil pengecekan kami hal tersebut berhubungan dengan service IMAP nya. Untuk itu cek terlebih dahulu error di lognya, karena IMAP servicenya menggunakan dovecot, maka lakukan pengecekan di file berikut:
+
+tail -f /var/log/dovecot.log
+
+Perhatikan log seperti berikut ini:
+
+Oct 04 09:35:55 imap-login: Info: Login: user=<admin@linboxs.net>, method=PLAIN, rip=127.0.0.1, lip=127.0.0.1, mpid=9625, secured, session=<OT+Pd69aEgB/AAAB>
+Oct 04 09:35:55 imap(admin@linboxs.net): Warning: autocreate plugin is deprecated, use mailbox { auto } setting instead Oct 04 09:35:55 imap(admin@linboxs.net): Error: user admin@linboxs.net: Initialization failed: namespace configuration error: inbox=yes namespace missing Oct 04 09:35:55 imap(admin@linboxs.net): Error: Invalid user settings. Refer to server log for more information.
+
+
+Edit file 15-mailboxes.conf seperti berikut
+
+vi /etc/dovecot/conf.d/15-mailboxes.conf
+
+Tambahkan value inbox = yes di antara namespace inbox {…} di dalam file berikut:
+
+##
+## Mailbox definitions
+##
+
+# NOTE: Assumes "namespace inbox" has been defined in 10-mail.conf.
+namespace inbox {
+inbox = yes
+ #mailbox name {
+ # auto=create will automatically create this mailbox.
+ # auto=subscribe will both create and subscribe to the mailbox.
+ #auto = no
+
+# Space separated list of IMAP SPECIAL-USE attributes as specified by
+ # RFC 6154: \All \Archive \Drafts \Flagged \Junk \Sent \Trash
+ #special_use =
+ #}
+
+# These mailboxes are widely used and could perhaps be created automatically:
+ mailbox Drafts {
+ special_use = \Drafts
+ }
+ mailbox Junk {
+ special_use = \Junk
+ }
+ mailbox Trash {
+ special_use = \Trash
+ }
+
+Simpan perubahan tersebut, kemudian restart service dovecotnya:
+
+service dovecot restart
+Test login ke webmail dan seharusnya berhasil.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
