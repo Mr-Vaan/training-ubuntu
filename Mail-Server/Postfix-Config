@@ -36,8 +36,6 @@ Package configuration
               │                                                                               │
               └───────────────────────────────────────────────────────────────────────────────┘
 
-
-
  ┌────────────────────────────────────────┤ Postfix Configuration ├────────────────────────────────────────┐
  │ The 'mail name' is the domain name used to 'qualify' _ALL_ mail addresses without a domain name. This   │
  │ includes mail to and from <root>: please do not make your machine send out mail from root@example.org   │
@@ -58,9 +56,6 @@ Package configuration
  └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 
-
-
-
  ┌───────────────────────────────────────┤ Pending kernel upgrade ├────────────────────────────────────────┐
  │                                                                                                         │
  │ Newer kernel available                                                                                  │
@@ -74,9 +69,6 @@ Package configuration
  │                                                 <*Ok>                                                   │
  │                                                                                                         │
  └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-
-
 
 
                                ┌────┤ Daemons using outdated libraries ├─────┐
@@ -98,10 +90,118 @@ Package configuration
                                │                                             │
                                └─────────────────────────────────────────────┘
 
+Installing Mailing :
+apt install mailutils –y 
 
-cp /usr/share/postfix/main.cf.dist /etc/postfix/main.cf
+Update Server Ubuntu :
+apt update && upgrade –y –fix-missing
 
-vi /etc/postfix/main.cf
+Adduser dan Ubah Usermode:
+# adduser lms
+# usermod –c “LMS IDN” lms
+
+Setting Hostsnya :
+# vi /etc/hosts
+192.168.43.22  mail.manusiaedu.id
+
+Setting Postfix :
+# vi /etc/postfix/main.cf
+smtpd_tls_cert_file=/etc/letsencrypt/live/zmail.idn.id/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/zmail.idn.id/privkey.pem
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_security_options = noanonymous
+broken_sasl_auth_clients = yes
+smtpd_sasl_auth_enable = yes
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, 
+reject_unauth_destination
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated 
+defer_unauth_destination
+myhostname = zmail.idn.id
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = localhost
+relayhost =
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 52.163.221.131 52.187.5.176
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = ipv4
+masquerade_domains = idn.id
+smtp_tls_security_level = may
+smtp_tls_loglevel = 1
+home_mailbox = Maildir/
+# DKIM
+# -----------------------
+milter_protocol = 6
+milter_default_action = accept
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891
+virtual_alias_maps = hash:/etc/postfix/virtual
+
+Restart Postfix :
+# systemctl restart postfix
+
+Setting juga pada master.cf :
+# vi /etc/postfix/main.cf
+# Uncommand mode berikut :
+submission inet n - y - - smtpd
+ -o syslog_name=postfix/submission
+ -o smtpd_tls_security_level=encrypt
+ -o smtpd_sasl_auth_enable=yes
+ -o smtpd_tls_auth_only=yes
+smtps inet n - y - - smtpd
+ -o syslog_name=postfix/smtps
+ -o smtpd_tls_wrappermode=yes
+ -o smtpd_sasl_auth_enable=yes
+
+Selanjutnya, kita akan menambahkan kredensial kata sandi ke file virtual untuk 
+mengautentikasi koneksi SMTP terenkripsi.
+
+# vi /etc/postfix/virtual
+admin@manusiaedu.id  admin
+
+Ubah file virtual menjadi file database. Kita dapat menggunakan perintah postmap untuk 
+mengonversi.
+postmap /etc/postfix/virtual
+
+Ubah keamanan dan kepemilikan file kata sandi untuk membatasi akses pengguna
+# chown root:root virtual virtual.db
+# chmod 644 virtual virtual.db
+
+systemctl restart postfix
+
+# vi /etc/aliases
+postmaster:  root
+root:  admin@manusiaedu.id
+========================================== Pake yang no Configure ==============================================
+
+Install Postfix :
+root@SERVER:~# apt -y install postfix sasl2-bin
+
+# on this example, proceed to select [No Configuration]
+# because configure all manually
++------+ Postfix Configuration +-------+
+| General type of mail configuration:  |
+|                                      |
+|      *No configuration               |
+|       Internet Site                  |
+|       Internet with smarthost        |
+|       Satellite system               |
+|       Local only                     |
+|                                      |
+|                                      |
+|      <*Ok>           <Cancel>        |
+|                                      |
++--------------------------------------+
+
+root@SERVER:~# cp /usr/share/postfix/main.cf.dist /etc/postfix/main.cf
+root@SERVER:~# vi /etc/postfix/main.cf
+
 # line 78 : uncomment
 mail_owner = postfix
 
@@ -127,7 +227,7 @@ local_recipient_maps = unix:passwd.byname $alias_maps
 mynetworks_style = subnet
 
 # line 287 : add your local network
-mynetworks = 127.0.0.0/8, 0.0.0.0/24, 192.168.43.0/24 
+mynetworks = 127.0.0.0/8, 192.168.43.0/24
 
 # line 407 : uncomment
 alias_maps = hash:/etc/aliases
@@ -188,20 +288,24 @@ smtpd_sasl_security_options = noanonymous
 smtpd_sasl_local_domain = $myhostname
 smtpd_recipient_restrictions = permit_mynetworks, permit_auth_destination, permit_sasl_authenticated, reject
 
+root@SERVER:~# newaliases
+root@SERVER:~# systemctl restart postfix
 
+root@SERVER:~# vi /etc/postfix/main.cf
 
+# add to the end
+# reject unknown clients that forward lookup and reverse lookup of their hostnames on DNS do not match
+smtpd_client_restrictions = permit_mynetworks, reject_unknown_client_hostname, permit
 
+# rejects senders that domain name set in FROM are not registered in DNS or 
+# not registered with FQDN
+smtpd_sender_restrictions = permit_mynetworks, reject_unknown_sender_domain, reject_non_fqdn_sender
 
+# reject hosts that domain name set in FROM are not registered in DNS or 
+# not registered with FQDN when your SMTP server receives HELO command
+smtpd_helo_restrictions = permit_mynetworks, reject_unknown_hostname, reject_non_fqdn_hostname, reject_invalid_hostname, permit
 
-
-
-
-
-
-
-
-
-
+root@SERVER:~# systemctl restart postfix
 
 
 
