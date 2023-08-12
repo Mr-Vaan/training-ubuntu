@@ -1,0 +1,134 @@
+======================================= Yang menggunakan Internet Site ===================================
+Install dovecot :
+# apt -y install dovecot-core dovecot-pop3d dovecot-imapd
+
+Konfigurasi Dovecotnya :
+# vi /etc/dovecot/dovecot.conf
+#uncomment “listen = *, ::”
+
+Konfigurasi Authentications Dovecot:
+# uncomment and change (allow plain text auth)
+Disable_plaintext_auth = no
+auth_mechanisms = plain login
+
+Konfigurasi Mailbox Locations:
+# vi /etc/dovecot/conf.d/10-mail.conf
+# mail_location = maildir:~/Maildir
+
+Konfigurasi Postfix SMTP Authnya :
+# vi /etc/dovecot/conf.d/10-master.conf
+# add pada unix_listener “/var/spool/postfix/private/auth” sebagai berikut:
+user = postfix
+group = postfix
+
+Konfigurasi SSL Dovecot :
+# vi /etc/dovecot/conf.d/10-ssl.conf
+# SSL Setting :
+# SSL/TLS support: yes, no, required. <doc/wiki/SSL.txt>
+ssl = yes
+# PEM encoded X.509 SSL/TLS certificate and private key. They're opened before
+# dropping root privileges, so keep the key file unreadable by anyone but
+# root. Included doc/mkcert.sh can be used to easily generate self-signed
+# certificate, just make sure to update the domains in dovecot-openssl.cnf
+ssl_cert = </etc/letsencrypt/live/zmail.idn.id/fullchain.pem
+ssl_key = </etc/letsencrypt/live/zmail.idn.id/privkey.pem
+
+Restart Dovecot :
+# systemctl restart dovecot
+Periksa dahulu DNS Recordnya :
+# dig -t mx idn.id
+# dig -t TXT zmail.idn.id
+# dig -t TXT idn.id
+# dig –x 103.129.205.146
+
+Install Opendkim :
+# apt install opendkim opendkim-tools
+Konfig file opendkimnya :
+# vi /etc/opendkim.conf
+
+UserID                  opendkim
+UMask                   007
+
+# Socket for the MTA connection (required). If the MTA is inside a chroot jail,
+# it must be ensured that the socket is accessible. In Debian, Postfix runs in
+# a chroot in /var/spool/postfix, therefore a Unix socket would have to be
+# configured as shown on the last line below.
+#Socket                 local:/run/opendkim/opendkim.sock
+Socket                  inet:8891@localhost
+#Socket                 inet:8891
+#Socket                 local:/var/spool/postfix/opendkim/opendkim.sock
+
+PidFile                 /run/opendkim/opendkim.pid
+
+# Hosts for which to sign rather than verify, default is 127.0.0.1. See the
+# OPERATION section of opendkim(8) for more information.
+#InternalHosts          192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12
+
+# The trust anchor enables DNSSEC. In Debian, the trust anchor file is provided
+# by the package dns-root-data.
+TrustAnchorFile         /usr/share/dns/root.key
+#Nameservers            127.0.0.1
+Domain  manusiaedu.id
+KeyFile /etc/postfix/dkim.key
+Selector dkim
+RequireSafeKeys false
+
+Mengirim Email Percobaan :
+Setelah kita me-restart pasca-konfigurasi Postfix, kita coba kirim email percobaan 
+menggunakan perintah di bawah ini.
+# echo "This is the body of the email" | mail -s "This is the subject line" 
+ivandhebel@gmail.com
+
+====================================== Yang Menggunakan No Configure ======================================
+Install dovecot :
+apt -y install dovecot-core dovecot-pop3d dovecot-imapd
+
+vi /etc/dovecot/dovecot.conf
+# line 30 : uncomment
+listen = *, ::
+
+vi /etc/dovecot/conf.d/10-auth.conf
+# line 10 : uncomment and change (allow plain text auth)
+disable_plaintext_auth = no
+# line 100 : add
+auth_mechanisms = plain login
+
+vi /etc/dovecot/conf.d/10-mail.conf
+# line 30 : change to Maildir
+mail_location = maildir:~/Maildir
+
+vi /etc/dovecot/conf.d/10-master.conf
+# line 107-109 : uncomment and add
+  # Postfix smtp-auth
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0666
+    user = postfix
+    group = postfix
+  }
+
+systemctl restart dovecot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
