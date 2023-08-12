@@ -36,7 +36,12 @@ Start Zabbix server and agent processes :
 # systemctl restart zabbix-server zabbix-agent apache2
 # systemctl enable zabbix-server zabbix-agent apache2
 
+========== You have a running Zabbix server with a web frontend. Use below default Zabbix admin login details: ================
 
+Username: Admin
+Password: zabbix
+
+=================================================================================================================
 Integrasi Zabbix dengan Telegram :
 
 1. Buat dulu akun bot Telegram di Botfather dengan command /newbot, kemudian nama botnya
