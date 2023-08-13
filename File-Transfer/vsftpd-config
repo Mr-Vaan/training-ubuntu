@@ -30,7 +30,8 @@ security
 
 root@SERVER-01:~# systemctl restart vsftpd
 
-
+Referensi Web Ngonfig :
+https://linux.how2shout.com/how-to-install-vsftpd-to-setup-ftp-server-on-ubuntu-22-04/
 
 
 
