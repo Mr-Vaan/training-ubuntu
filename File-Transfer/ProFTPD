@@ -1,0 +1,43 @@
+
+root@SERVER-01:~# apt -y install proftpd-basic
+root@SERVER-01:~# vi /etc/proftpd/proftpd.conf
+# line 11 : turn to [off] if not need
+UseIPv6 off
+
+# line 17 : change to your hostname
+ServerName "www.manusiaedu.id"
+
+# line 39 : uncomment (specify root directory for chroot)
+DefaultRoot ~
+
+root@SERVER-01:~# vi /etc/ftpusers
+# add users you prohibit FTP connection
+test
+
+root@SERVER-01:~# systemctl restart proftpd
+
+root@SERVER-01:~#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
