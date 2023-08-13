@@ -1,0 +1,49 @@
+
+root@SERVER-01:~# apt -y install vsftpd
+root@SERVER-01:~# vi /etc/vsftpd.conf
+# line 31 : uncomment
+write_enable=YES
+
+# line 122, 123 : uncomment (enable chroot)
+# and add the line to enable writable under the chroot derectory
+chroot_local_user=YES
+chroot_list_enable=YES
+allow_writeable_chroot=YES
+
+# line 125 : uncomment (enable chroot list)
+chroot_list_file=/etc/vsftpd.chroot_list
+
+# line 131 : uncomment
+ls_recurse_enable=YES
+
+# add to the end : specify chroot directory
+# if not specified, users' home directory equals FTP home directory
+local_root=public_html
+
+root@SERVER-01:~# adduser ubuntu
+Enter the password [123]
+
+root@SERVER-01:~# vi /etc/vsftpd.chroot_list
+# add users you allow to move over their home directory
+ubuntu
+security
+
+root@SERVER-01:~# systemctl restart vsftpd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
