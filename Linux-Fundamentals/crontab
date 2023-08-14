@@ -1,0 +1,11 @@
+
+
+crontab -e
+
+* * * * * apt update -y > /var/log/syslog
+
+
+
+
+
+
