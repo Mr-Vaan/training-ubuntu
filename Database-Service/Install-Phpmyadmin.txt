@@ -187,10 +187,45 @@ https://domain_name_or_IP/phpmyadmin
 
 
 
+TROUBLESHOOTING PHPMYADMIN NOT WORKING :
+Contoh Kasus :
+-- ubuntu 22.04 - phpmyadmin not working --
 
+On Ubuntu 22.04, after installing apache, php, mysql and phpmyadmin, the link http://localhost/phpmyadmin/ returns a blank page. The only code outputted is:
 
+<?php
 
+declare(strict_types=1);
 
+use PhpMyAdmin\Routing;
+
+if (! defined('ROOT_PATH')) {
+    // phpcs:disable PSR1.Files.SideEffects
+    define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+    // phpcs:enable
+}
+
+global $route, $containerBuilder;
+
+require_once ROOT_PATH . 'libraries/common.inc.php';
+
+$dispatcher = Routing::getDispatcher();
+Routing::callControllerForRoute($route, $dispatcher, $containerBuilder);
+
+SOLUSI :
+returns a blank page. The only code outputted
+
+is the PHP code returned from the page and not executed ?
+
+if yes, seems like you did not install libapache2-mod-php(version), where version is your PHP version, i.e for PHP 8.1:
+
+root@SERVER:~# sudo apt install libapache2-mod-php8.1
+
+after that, reload the apache :
+
+root@SERVER:~# sudo systemctl restart apache2
+
+and try to access phpmyadmin
 
 
 
