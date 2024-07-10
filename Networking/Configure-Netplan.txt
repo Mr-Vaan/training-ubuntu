@@ -24,14 +24,6 @@ network:
   version: 2
 
 
-
-
-
-
-
-
-
-
 CARA KALO ADA VLANNYA :
 network:
   ethernets:
@@ -71,40 +63,40 @@ network:
         transmit-hash-policy: layer3+4
 
   vlans:
-    bond0.190:
-      id: 190
+    bond0.19x:
+      id: 19x
       link: bond0
       mtu: 1500
       addresses:
-        - 192.168.190.11/24
+        - 192.168.x.x/24
       routes:
         - to: default
-          via: 192.168.190.1
+          via: 192.168.x.x
       nameservers:
         addresses: [8.8.8.8, 8.8.4.4]
-    bond0.191:
-      id: 191
+    bond0.19x:
+      id: 19x
       link: bond0
       mtu: 1500
       addresses:
-        - 192.168.191.X/24
-    bond0.192:
-      id: 192
+        - 192.168.x.x/24
+    bond0.19x:
+      id: 19x
       link: bond0
       mtu: 9000
       addresses:
-        - 192.168.192.X/24
-    bond1.193:
-      id: 193
+        - 192.168.x.x/24
+    bond1.19x:
+      id: 19x
       link: bond1
       mtu: 9000
       addresses:
-        - 192.168.193.X/24
-    bond1.194:
-      id: 194
+        - 192.168.x.x/24
+    bond1.19x:
+      id: 19x
       link: bond1
       mtu: 9000
       addresses:
-        - 192.168.194.X/24
+        - 192.168.x.x/24
 
 
