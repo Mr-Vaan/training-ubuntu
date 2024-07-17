@@ -1,0 +1,118 @@
+
+https://unetlab.cloud/UNETLAB%20II/
+
+============================================= KVM AND CLOUD IMAGES/INIT ==================================================
+- apt update && upgrade -y --fix-missing
+- egrep -c '(vmx|svm)' /proc/cpuinfo
+- apt install cpu-checker -y
+- kvm-ok
+- apt install -y qemu-kvm virt-manager libvirt-daemon-system virtinst libvirt-clients bridge-utils
+- systemctl start libvirtd
+- systemctl enable libvirtd
+- systemctl status libvirtd
+- usermod -aG kvm $USER
+- usermod -aG libvirt $USER
+- vi /etc/netplan/00-installer-config.yaml
+network:
+  ethernets:
+    ens160:
+      dhcp4: false
+  bridges:
+    br0:
+      interfaces: [ens160]
+      dhcp4: false
+      addresses: [10.23.1.240/22]
+      routes:
+        - to: default
+          via: 10.23.0.1
+          metric: 100
+      nameservers:
+        addresses: [8.8.8.8]
+  version: 2
+:wq  -> (untuk ngesave)
+- netplan apply
+- vi bridged-network.xml
+<network>
+  <name>bridged-network</name>
+  <forward mode="bridge"/>
+  <bridge name="br0"/>
+</network>
+:wq -> (untuk negsave)
+- virsh net-define bridged-network.xml
+- virsh net-start bridged-network
+- virsh net-list --all
+- sudo mkdir /var/lib/libvirt/images/templates
+- wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
+- sudo mv -i jammy-server-cloudimg-amd64.img /var/lib/libvirt/images/templates/ubuntu-22-server.qcow2
+- apt update && apt install cloud-utils whois -y
+
+- Setup Konfigurasi VM :
+VM_NAME="ubuntu-ivan-22.04"
+USERNAME="security"
+PASSWORD="12345"
+
+- Create new VM
+sudo mkdir /var/lib/libvirt/images/$VM_NAME \
+  && sudo qemu-img convert \
+  -f qcow2 \
+  -O qcow2 \
+  /var/lib/libvirt/images/templates/ubuntu-22-server.qcow2 \
+  /var/lib/libvirt/images/$VM_NAME/root-disk.qcow2
+- Size storage VM :
+sudo qemu-img resize \
+  /var/lib/libvirt/images/$VM_NAME/root-disk.qcow2 \
+  20G
+- Setup hostname & password pake cloud-init :
+sudo echo "#cloud-config
+system_info:
+  default_user:
+    name: $USERNAME
+    home: /home/$USERNAME
+
+password: $PASSWORD
+chpasswd: { expire: False }
+hostname: $VM_NAME
+
+# configure sshd to allow users logging in using password 
+# rather than just keys
+ssh_pwauth: True
+" | sudo tee /var/lib/libvirt/images/$VM_NAME/cloud-init.cfg
+
+- Meng-Copy ISO Dari Cloud Images :
+- sudo cloud-localds \
+  /var/lib/libvirt/images/$VM_NAME/cloud-init.iso \
+  /var/lib/libvirt/images/$VM_NAME/cloud-init.cfg
+
+- sudo virt-install \
+  --name $VM_NAME \
+  --memory 1024 \
+  --disk /var/lib/libvirt/images/$VM_NAME/root-disk.qcow2,device=disk,bus=virtio \
+  --disk /var/lib/libvirt/images/$VM_NAME/cloud-init.iso,device=cdrom \
+  --os-type linux \
+  --os-variant ubuntu22.04 \
+  --virt-type kvm \
+  --graphics none \
+  --network network=bridged-network,model=virtio \
+  --import
+- Connect to Console system :
+- virsh --connect qemu:///system console ubuntu-ivan-22
+- "virsh -c qemu:///system list" Atau Bisa Juga "virsh list" -> Untuk melihat VM yang berjalan
+- virsh undefine --domain ubuntu-ivan-22 --remove-all-storage --delete-snapshots
+- virsh start --domain ubuntu-ivan-22
+- virsh shutdown --domain ubuntu-ivan-22
+-  
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+
